@@ -177,6 +177,8 @@ unpushed commits, never-pushed branches, stashes and broken worktrees. Running i
 
 Run it before any restructuring, and periodically otherwise.
 
+Of that list, the broken worktree has since been pruned; the rest still stands.
+
 **`make pull` is `--ff-only` and skips dirty repositories.** With unpushed commits and
 `claude/*` branches in play, a blanket `git pull` would create merge commits or stop
 half-way in a confusing state. Fast-forward-or-report is the only safe default.
@@ -223,14 +225,12 @@ workspace, repoint it at `openalexPro_Ecosystem/openalexPro`.
 
 ### Outstanding
 
-The root repository was initialised and committed on 2026-08-17. Still pending:
+The root repository was initialised and committed, and openalexSnowball's dead
+pre-move worktree was pruned, both on 2026-08-17. Still pending:
 
 ```bash
-# no remote yet — nothing here is backed up off this machine
+# no remote yet — nothing in the root repository is backed up off this machine
 git remote add origin git@github.com:openalexPro/<name>.git && git push -u origin main
-
-# openalexSnowball still carries the dead pre-move worktree (make audit reports it)
-git -C openalexSnowball worktree prune
 ```
 
 `openalexSnapshot/src/rust/target` is also still present at **18 GB**. It is
@@ -240,11 +240,14 @@ backend entirely — so it can be deleted whenever convenient.
 
 ### What broke on the rename, regardless of tooling
 
-* **Git worktrees.** They store absolute paths. `openalexSnowball` still carries a
-  worktree pointing at `/Users/rkrug/GitHub/openalexSnowball/.claude/worktrees/…`, a
-  path from *before* the packages were gathered into this directory — dead since then,
-  and still reported by `make audit`. Run the `prune` above to clear it. Any worktree
-  broken specifically by the rename needs `git worktree repair`.
+* **Git worktrees.** They store absolute paths. `openalexSnowball` carried a worktree
+  pointing at `/Users/rkrug/GitHub/openalexSnowball/.claude/worktrees/…`, a path from
+  *before* the packages were gathered into this directory — dead ever since, and
+  surfaced by `make audit`. **Pruned on 2026-08-17.** Only the 32 KB of bookkeeping in
+  `.git/worktrees/` went; branch `claude/nervous-noether-cb132b` (`e2c5322`, already
+  on the remote) was untouched and is now checkoutable again, which it was not while
+  git believed it was checked out at the missing path. Use `prune` when the working
+  directory is gone; use `git worktree repair` when it merely moved.
 * **The Claude project directory.** It is keyed by path, so the rename moved the key
   from `~/.claude/projects/-Users-rkrug-GitHub-openalexPro/` to
   `…-openalexPro-Ecosystem/`. **This carried over**: the new key holds the memory files
