@@ -1,0 +1,37 @@
+# openalexPro ecosystem manifest
+#
+# Columns: name <TAB> url <TAB> default-branch <TAB> kind
+#
+# `name` is the LOCAL DIRECTORY, which need not match the repository name. The
+# org's `.github` repo is cloned into `dot-github/` so that a hidden directory
+# is not mistaken for this repository's own GitHub config, and so that `.github/`
+# stays free for that actual purpose. `make clone` passes name as the clone
+# target, so the mapping needs no special handling.
+#
+# kind is one of:
+#   r-package  an R package. Every target covers it, including `make install`,
+#              `make test` and `make check`.
+#   support    infrastructure repo, not an R package. The git targets (status,
+#              audit, clone, fetch, pull) cover it; the R build targets skip it.
+#
+# ORDER MATTERS for the r-package rows: this is dependency order. `make
+# install`, `make test` and `make check` walk the file top to bottom, so
+# openalexPro must come first. Keep the support rows at the end.
+#
+# URLs are SSH throughout so pushes do not prompt. Note that some existing
+# local clones still use HTTPS remotes — see ecosystem.md ("Remote URLs").
+# Only `make clone` reads the url column, so the mismatch is harmless.
+#
+# Repos deliberately absent: openalexStemCheck (not a git repository) and
+# openalexASReview (no remote, slated for retirement). See ecosystem.md.
+# Also in the org but not cloned here: openalex-snapshot (Rust CLI) and
+# openalexpro.r-universe.dev (r-universe build config).
+#
+# name	url	branch	kind
+openalexPro	git@github.com:openalexPro/openalexPro.git	dev	r-package
+openalexSnapshot	git@github.com:openalexPro/openalexSnapshot.git	dev	r-package
+openalexConvert	git@github.com:openalexPro/openalexConvert.git	dev	r-package
+openalexSnowball	git@github.com:openalexPro/openalexSnowball.git	dev	r-package
+openalexVectorComp	git@github.com:openalexPro/openalexVectorComp.git	dev	r-package
+dot-github	git@github.com:openalexPro/.github.git	main	support
+openalexpro.github.io	git@github.com:openalexPro/openalexpro.github.io.git	main	support

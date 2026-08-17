@@ -1,0 +1,50 @@
+# The repo directories are independent git clones, not submodules.
+# They are ignored here so the ecosystem repo tracks only its own tooling.
+#
+# Listed explicitly rather than by wildcard, so a genuinely new top-level
+# file is never silently ignored.
+
+/openalexPro/
+/openalexSnapshot/
+/openalexConvert/
+/openalexSnowball/
+/openalexVectorComp/
+/openalexStemCheck/
+/openalexASReview/
+
+# Support repos (see repos.tsv, kind = support). The org's .github repository is
+# cloned into /dot-github/, deliberately NOT /.github/, so that /.github/ stays
+# available for this repository's own workflows and templates.
+/dot-github/
+/openalexpro.github.io/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Custom folder icon: the real filename is "Icon" + a carriage return, so it
+# is matched with a wildcard rather than a bare "Icon" (which would also
+# ignore any legitimately-named Icon file or directory).
+Icon?
+
+# editor noise
+.Rproj.user/
+*.Rproj
+
+# local scratch
+/scratch/
