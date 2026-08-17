@@ -58,8 +58,8 @@ package whose `Imports:` pins tested minimums — not a git superproject.
 ```
 
 The root is a thin git repository: it versions the tooling and the documentation, and
-nothing else. It was initialised and given its first commit on 2026-08-17. It has
-**no remote yet**.
+nothing else. Initialised, committed and published on 2026-08-17 to
+<https://github.com/openalexPro/openalexPro_Ecosystem>.
 
 **This repository has no `dev` branch, by design.** Development happens inside the
 individual package repositories; this one only ever carries coordination files, so
@@ -194,6 +194,23 @@ it currently reports openalexConvert as `!! declared, NO FLOOR`.
 
 ---
 
+## Bootstrapping a new machine
+
+Now that the root repository is published, the whole workspace comes up in two steps:
+
+```bash
+git clone https://github.com/openalexPro/openalexPro_Ecosystem.git
+cd openalexPro_Ecosystem
+make clone          # every repo in repos.tsv, on its default branch
+```
+
+The root repository is **not** listed in `repos.tsv` — it is the thing that carries
+the manifest, so it cannot be an entry in it. `openalexStemCheck` and
+`openalexASReview` are not in the manifest either and will not appear; see
+"Repositories deliberately absent".
+
+---
+
 ## Daily workflow
 
 ```bash
@@ -225,13 +242,13 @@ workspace, repoint it at `openalexPro_Ecosystem/openalexPro`.
 
 ### Outstanding
 
-The root repository was initialised and committed, and openalexSnowball's dead
-pre-move worktree was pruned, both on 2026-08-17. Still pending:
+Nothing. The root repository was initialised, committed and published, and
+openalexSnowball's dead pre-move worktree was pruned, all on 2026-08-17.
 
-```bash
-# no remote yet — nothing in the root repository is backed up off this machine
-git remote add origin git@github.com:openalexPro/<name>.git && git push -u origin main
-```
+What remains is per-package work, which `make audit` reports: unpushed commits on
+`openalexPro` and `openalexSnowball`, local-only branches on both plus
+`openalexConvert`, one uncommitted file in `openalexConvert`, and a stash in
+`openalexVectorComp`. The 18 GB `openalexSnapshot/src/rust/target` is still there too.
 
 `openalexSnapshot/src/rust/target` is also still present at **18 GB**. It is
 regenerable Rust build output, is **not** covered by that package's `.gitignore` (see
