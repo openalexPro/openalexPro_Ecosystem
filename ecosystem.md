@@ -258,21 +258,25 @@ backend entirely — so it can be deleted whenever convenient.
 ### What broke on the rename, regardless of tooling
 
 * **Git worktrees.** They store absolute paths. `openalexSnowball` carried a worktree
-  pointing at `/Users/rkrug/GitHub/openalexSnowball/.claude/worktrees/…`, a path from
-  *before* the packages were gathered into this directory — dead ever since, and
+  pointing at `../openalexSnowball/.claude/worktrees/…` — a sibling of this directory,
+  from *before* the packages were gathered into it — dead ever since, and
   surfaced by `make audit`. **Pruned on 2026-08-17.** Only the 32 KB of bookkeeping in
   `.git/worktrees/` went; branch `claude/nervous-noether-cb132b` (`e2c5322`, already
   on the remote) was untouched and is now checkoutable again, which it was not while
   git believed it was checked out at the missing path. Use `prune` when the working
   directory is gone; use `git worktree repair` when it merely moved.
-* **The Claude project directory.** It is keyed by path, so the rename moved the key
-  from `~/.claude/projects/-Users-rkrug-GitHub-openalexPro/` to
-  `…-openalexPro-Ecosystem/`. **This carried over**: the new key holds the memory files
-  and the earlier transcript. The old directory is still on disk and can be removed
-  once nothing needs it.
+* **The Claude project directory.** It lives under `~/.claude/projects/` and is keyed
+  by a slug of this directory's absolute path, so renaming the directory changes the
+  key: the `…-openalexPro` slug became `…-openalexPro-Ecosystem`. **This carried
+  over**: the new key holds the memory files and the earlier transcript. The old one
+  is still on disk and can be removed once nothing needs it.
 * `.Rproj.user`, IDE state, `.claude/launch.json`, and any absolute paths in local
-  configuration. `/Volumes/openalex` is external and unaffected. No stale absolute
+  configuration. `/Volumes/openalex` is an external mount and unaffected. No stale
   paths to the old location remain in the `Makefile`, `repos.tsv` or the markdown.
+
+Paths in this document are relative to the workspace root, or `~`-prefixed where they
+genuinely sit outside it. `/Volumes/openalex` is the one exception: it is an external
+volume mount point, so it has no relative form.
 
 ---
 
