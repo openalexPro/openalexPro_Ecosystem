@@ -18,6 +18,10 @@
 /dot-github/
 /openalexpro.github.io/
 
+# Symlink to the OpenAlex parquet snapshot on an external volume
+# (/Volumes/openalex/parquet). Machine-specific; never committed.
+/openalex_snapshot
+
 # macOS
 .DS_Store
 .DS_Store?
