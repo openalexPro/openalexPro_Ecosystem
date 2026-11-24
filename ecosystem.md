@@ -50,7 +50,7 @@ package whose `Imports:` pins tested minimums — not a git superproject.
 ├── openalexConvert/            ├─ R packages: independent clones, ignored here
 ├── openalexSnowball/           │
 ├── openalexVectorComp/         │
-├── openalexAPI/                ┘  (private repo, in development)
+├── openalexAPI/                ┘  (alpha; public, not on r-universe)
 ├── openalexStemCheck/          not a git repository (see below)
 ├── openalexASReview/           no remote; slated for retirement (see below)
 │
@@ -121,6 +121,11 @@ on GitHub, `openalexpro.github.io` is the public landing page off it.
 | `openalexASReview` | **No remote**, local-only `main`, uncommitted work. Slated for retirement. | Same, if it is kept. |
 | `openalex-snapshot` | In the org, but a **Rust CLI**, not part of the R build chain. Lives at `~/GitHub/openalex-snapshot`. | Clone here and add a `support` row, if it is wanted in `make status`. |
 | `openalexpro.r-universe.dev` | In the org; r-universe build configuration, rarely edited. | Same. |
+
+**openalexAPI is deliberately not on r-universe.** It is public and in the manifest, but in
+alpha (since 0.1.0, 2026-11-24): not in the r-universe registry, installed from GitHub
+(`pak::pak("openalexPro/openalexAPI")`), and marked Alpha on the landing page and the org
+profile. Add it to `openalexpro.r-universe.dev` when it leaves alpha.
 
 `openalexStemCheck` and `openalexASReview` are still listed in `.gitignore` so they
 are never accidentally committed into the root repository. `make clone` is the
