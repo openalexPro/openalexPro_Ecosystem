@@ -49,7 +49,8 @@ package whose `Imports:` pins tested minimums — not a git superproject.
 ├── openalexSnapshot/           │
 ├── openalexConvert/            ├─ R packages: independent clones, ignored here
 ├── openalexSnowball/           │
-├── openalexVectorComp/         ┘
+├── openalexVectorComp/         │
+├── openalexAPI/                ┘  (private repo, in development)
 ├── openalexStemCheck/          not a git repository (see below)
 ├── openalexASReview/           no remote; slated for retirement (see below)
 │
