@@ -34,5 +34,6 @@ openalexConvert	git@github.com:openalexPro/openalexConvert.git	dev	r-package
 openalexSnowball	git@github.com:openalexPro/openalexSnowball.git	dev	r-package
 openalexVectorComp	git@github.com:openalexPro/openalexVectorComp.git	dev	r-package
 openalexAPI	git@github.com:openalexPro/openalexAPI.git	dev	r-package
+openalexImportPolicy	git@github.com:openalexPro/openalexImportPolicy.git	dev	r-package
 dot-github	git@github.com:openalexPro/.github.git	main	support
 openalexpro.github.io	git@github.com:openalexPro/openalexpro.github.io.git	main	support
