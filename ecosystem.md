@@ -2,7 +2,7 @@
 
 How this directory is organised, and how to work across the packages in it.
 
-**Last updated:** 2026-11-25
+**Last updated:** 2026-11-26
 
 ---
 
@@ -51,7 +51,8 @@ package whose `Imports:` pins tested minimums — not a git superproject.
 ├── openalexSnowball/           │
 ├── openalexVectorComp/         │
 ├── openalexAPI/                │  (alpha; public, not on r-universe)
-├── openalexImportPolicy/       ┘  (private; formerly cnp)
+├── openalexImportPolicy/       │  (private; formerly cnp)
+├── openalexImportZenodo/       ┘  (alpha at most; public, not on r-universe)
 ├── openalexStemCheck/          not a git repository (see below)
 ├── openalexASReview/           no remote; slated for retirement (see below)
 │
@@ -134,6 +135,14 @@ CBD, InforMEA, FAOLEX) and exports them as an OpenAlex works corpus for openalex
 planned `openalexImport<Source>` family. While it is private, `make clone` needs a GitHub account with
 access to it (others get a clone error for this row only), its DOI is a placeholder, its pkgdown site is
 built but not deployed, and it is not on the landing page, the org profile or r-universe.
+
+**openalexImportZenodo is alpha at most.** Created 2026-11-26 as the second `openalexImport<Source>`
+package: it downloads Zenodo communities, searches and record lists, updates them incrementally, and
+writes a Zenodo-only OpenAlex works corpus (`zenodo:<conceptrecid>` IDs) plus a link table shaped like
+OpenAlex's `/links`. Design in its `APPROACH.md`; download code copied (not moved) from
+`~/GitHub/zenodo-openalex-collection`, which stays independent. Public, but no release yet: `main`
+holds only the design document, the code is on `dev` (`pak::pak("openalexPro/openalexImportZenodo@dev")`).
+No DOI, no pkgdown site, not on r-universe, the landing page or the org profile.
 
 `openalexStemCheck` and `openalexASReview` are still listed in `.gitignore` so they
 are never accidentally committed into the root repository. `make clone` is the
