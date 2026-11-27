@@ -14,7 +14,7 @@
   "openalexPro/openalexPro@dev": {
     "commit": "a6981a0ebc19134a46658fb4ca50aae0b63774c1",
     "standard": "af7d10f2f6924396912962cec9630a3bbb328d10",
-    "checker": "4e6ee9e8422721e656597f8df31b3016503bd67b",
+    "checker": "a5f0b4a9e45b306038fae1841678f591f16fb290",
     "verdict": "not compliant"
   }
 }

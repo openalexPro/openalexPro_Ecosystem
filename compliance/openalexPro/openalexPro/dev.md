@@ -43,7 +43,7 @@
 | I7 | MUST | &#x2713; |  |  |
 | P1 | MUST | &#x2713; | `openalexPro` |  |
 | P2 | SHOULD | &#x2717; | no `Config/openalexPro/standard` | add `Config/openalexPro/standard: 0.1` |
-| P3 | MUST | not verified | not automated |  |
+| P3 | MUST | n/a | applies to `openalexImport*` packages |  |
 | P4 | MUST | &#x2717; | no test calls `openalexAPI::prepare_corpus()` | add one on the example corpus (P7) |
 | P5 | MUST | n/a | applies to consumer |  |
 | P6 | MUST | &#x2713; | MIT; CITATION.cff; pkgdown (dev/main branches not checked) |  |

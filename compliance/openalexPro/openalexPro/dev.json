@@ -249,8 +249,8 @@
     {
       "rule": "P3",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "not automated",
+      "status": "n/a",
+      "evidence": "applies to `openalexImport*` packages",
       "fix": ""
     },
     {
