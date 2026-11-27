@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "verdict": "error",
+    "note": "no R package on this branch (no DESCRIPTION)"
+  }
+}

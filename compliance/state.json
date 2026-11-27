@@ -1,1 +1,14 @@
-{}
+{
+  "openalexPro/openalexImportZenodo@dev": {
+    "commit": "60f58cd34b8a118130c2e9d04586bea19553958c",
+    "standard": "af7d10f2f6924396912962cec9630a3bbb328d10",
+    "checker": "4e6ee9e8422721e656597f8df31b3016503bd67b",
+    "verdict": "not compliant"
+  },
+  "openalexPro/openalexImportZenodo@main": {
+    "commit": "63954f2094b9bc1480dfce78d7cebd5ee6773af3",
+    "standard": "af7d10f2f6924396912962cec9630a3bbb328d10",
+    "checker": "4e6ee9e8422721e656597f8df31b3016503bd67b",
+    "verdict": "error"
+  }
+}

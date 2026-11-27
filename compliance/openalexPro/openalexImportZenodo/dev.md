@@ -1,88 +1,70 @@
 # Compliance report: openalexImportZenodo
 
-- **Standard:** STANDARD.md 0.1 (draft)
-- **Package:** openalexImportZenodo 0.0.0.9000 · openalexPro/openalexImportZenodo @ dev 60f58cd
-- **Kind:** writer
-- **Date:** 2026-11-27
-- **Verdict:** not compliant (8 MUST, 2 SHOULD open)
-
-**Corpus checked:** built with the package's own `zenodo_build()` and
-`zenodo_as_corpus()` from the stored IPBES community records (`ipbes_zenodo/raw/`,
-567 deposits, 704 links), in a scratch folder. `openalexAPI::prepare_corpus()` builds
-a database from it without errors. The existing `ipbes_zenodo/corpus/` (built
-2026-11-26) has no `_query.json`; a rebuild with the current code adds it.
+- **Standard:** STANDARD.md 0.1 (checker openalexStandard 0.1.0)
+- **Package:** openalexImportZenodo 0.0.0.9000 &middot; openalexPro/openalexImportZenodo @ dev 60f58cd
+- **Kind:** writer (prefix `zenodo`)
+- **Corpus:** no example corpus (P7)
+- **Verdict:** not compliant (2 MUST, 2 SHOULD open)
 
 ## Results
 
 | Rule | Level | Status | Evidence | Fix |
 |---|---|---|---|---|
-| L1 | MUST | ✓ | `corpus/query=zenodo/data.parquet` | |
-| L2 | MUST | ✓ | `query=<name>/` for corpus and links (`R/build.R:84-85`) | |
-| L3 | MUST | ✓ | `<name>` checked by `check_name()` | |
-| L4 | MUST | ✓ | only `_query.json`, `_query.html` besides Parquet | |
-| L5 | MAY | n/a | reader rule | |
-| L5a | MUST | n/a | reader rule | |
-| L5b | MUST | ✓ | no `query` column in the files (DuckDB shows one only through Hive auto-detection) | |
-| L5c | MUST | n/a | reader rule | |
-| S1 | MUST | ✓ | `id`, `title`, `display_name` | |
-| S2 | MUST | ✓ | OpenAlex names and structures (`authorships`, `primary_location`, `ids`, …) | |
-| S3 | SHOULD | ✓ | `publication_year` INTEGER, `publication_date` DATE; others absent | |
-| S4 | MAY | ✓ | plain-text `abstract` | |
-| S5 | MUST | ✓ | all 21 extra columns are `zenodo_*` | |
-| S5a | MUST | ✓ | `abstract` used with its reserved meaning | |
-| S6 | MUST | ✓ | 567 rows, 0 duplicate `id`s | |
-| D1 | MUST | ✗ | no `_dataset.json` written | write it in `zenodo_build()` / `zenodo_as_corpus()` |
-| D2 | MUST | ✗ | (no file) | keep it free of timestamps: `_query.json`'s `started`/`finished` must not go into it |
-| D3 | MUST | ✗ | (no file) | `{"standard":"0.1","type":"works","writer":{"package":"openalexImportZenodo","version":…,"prefix":"zenodo"},"partition_keys":["query"],"id_format":"zenodo:<conceptrecid>"}` |
-| D4 | MUST | n/a | reader rule | |
-| Q1 | MUST | ✓ | `_query.json` copied into each partition (`R/build.R:89`, `write_split()`) | |
-| Q2 | SHOULD | ✓ | `source` and `build` settings are enough for `zenodo_update()` | |
-| Q3 | SHOULD | ✓ | `_query.html` | |
-| Q4 | MUST | ✓ | `zenodo_as_corpus()` copies whole partitions | |
-| Q5 | MAY | ✓ | `_query.json` holds `started`/`finished`; allowed | |
-| I1 | MUST | n/a | no OpenAlex records | |
-| I2 | MUST | ✓ | all 567 ids are `zenodo:<n>` | |
-| I3 | MUST | ✗ | no `id_format` (no `_dataset.json`) | see D3 |
-| I4 | SHOULD | ✓ | `ids.doi`, `ids.zenodo` | consider `ids.zenodo` = `zenodo:<n>` instead of the record URL |
-| I5 | MUST | ✓ | prefix `zenodo` registered | |
-| I6 | SHOULD | ✓ | `https://doi.org/…`, 0 upper-case | |
-| I7 | MUST | ✓ | `zenodo` is not a scheme name | |
-| P1 | MUST | ✓ | `openalexImport<Source>` | |
-| P2 | MUST/SHOULD | ✗ (SHOULD) | does not call openalexPro (no floor needed); no `Config/openalexPro/standard` | add `Config/openalexPro/standard: 0.1` |
-| P3 | MUST | ✓ | `zenodo_as_corpus(project_folder, out, name)` (`R/update.R:47`) | |
-| P4 | MUST | ✗ | no test runs `openalexAPI::prepare_corpus()` | add one on the fixture corpus; openalexAPI in Suggests |
-| P5 | MUST | n/a | not a reader | |
-| P6 | MUST/SHOULD | ✗ (SHOULD) | MIT ✓, `repos.tsv` ✓, `dev` ✓; no `CITATION.cff`, no pkgdown site | add both (planned with the first release) |
-| P7 | MUST | ✗ | no `zenodo_example_corpus()`; test fixtures are raw API responses (`tests/testthat/fixtures/hit_real.json`) | export `zenodo_example_corpus(out)` building from a few stored records shipped in `inst/extdata` |
-| K1 | MUST | ✗ | required columns ✓; extra columns `relation`, `relation_declared`, `scheme`, `related_type`, `declared_on` have no prefix | rename to `zenodo_*` |
-| K2 | MUST | ✓ / not verified | `parquet_split = "none"` writes a file even with zero rows; numeric and partitioned splits write none | write an empty file with the schema in those modes |
-| K3 | MAY | ✓ | 14 citation links between corpus works also in `referenced_works`; repeating is allowed | |
-| K4 | MUST | ✗ | outside ends: 141 DOI URLs, 54 URLs ✓; 2 `handle` and 1 `isbn` are bare identifiers (the scheme is only in the `scheme` column) | write `handle:…`, `isbn:…`, i.e. `<scheme>:<identifier>` for every scheme other than `doi` and `url` |
-| A1 | MUST | n/a | writer only; reads no corpus (§8) | |
-| A2 | MUST | n/a | writer only; reads no corpus (§8) | |
-| A3 | MUST | n/a | writer only; reads no corpus (§8) | |
-| T1 | MUST | n/a | writer only; reads no corpus (§8) | |
-| T2 | MUST | n/a | writer only; reads no corpus (§8) | |
-| T3 | MUST | n/a | writer only; reads no corpus (§8) | |
-| N1 | MUST | n/a | writer only; reads no corpus (§8) | |
-| N2 | MUST | n/a | writer only; reads no corpus (§8) | |
-| N3 | MUST | n/a | writer only; reads no corpus (§8) | |
-| C1 | MUST | n/a | writer only; reads no corpus (§8) | |
-| C2 | MUST | n/a | writer only; reads no corpus (§8) | |
+| L1 | MUST | not verified | no example corpus (P7) |  |
+| L2 | MUST | not verified | no example corpus (P7) |  |
+| L3 | MUST | not verified | no example corpus (P7) |  |
+| L4 | MUST | not verified | no example corpus (P7) |  |
+| L5 | MAY | n/a | applies to consumer, transformer, annotator |  |
+| L5a | MUST | n/a | applies to consumer, transformer, annotator |  |
+| L5b | MUST | not verified | no example corpus (P7) |  |
+| L5c | MUST | n/a | applies to consumer, transformer, annotator |  |
+| S1 | MUST | not verified | no example corpus (P7) |  |
+| S2 | MUST | not verified | no example corpus (P7) |  |
+| S3 | SHOULD | not verified | no example corpus (P7) |  |
+| S4 | MAY | not verified | no example corpus (P7) |  |
+| S5 | MUST | not verified | no example corpus (P7) |  |
+| S5a | MUST | not verified | no example corpus (P7) |  |
+| S6 | MUST | not verified | no example corpus (P7) |  |
+| D1 | MUST | not verified | no example corpus (P7) |  |
+| D2 | MUST | not verified | no example corpus (P7) |  |
+| D3 | MUST | not verified | no example corpus (P7) |  |
+| D4 | MUST | n/a | applies to consumer, transformer, annotator |  |
+| Q1 | MUST | not verified | no example corpus (P7) |  |
+| Q2 | SHOULD | manual | review: _query.json is enough to repeat the download |  |
+| Q3 | SHOULD | not verified | no example corpus (P7) |  |
+| Q4 | MUST | not verified | no example corpus (P7) |  |
+| Q5 | MAY | not verified | no example corpus (P7) |  |
+| I1 | MUST | not verified | no example corpus (P7) |  |
+| I2 | MUST | not verified | no example corpus (P7) |  |
+| I3 | MUST | not verified | no example corpus (P7) |  |
+| I4 | SHOULD | not verified | no example corpus (P7) |  |
+| I5 | MUST | &#x2713; | `zenodo` |  |
+| I6 | SHOULD | not verified | no example corpus (P7) |  |
+| I7 | MUST | &#x2713; |  |  |
+| P1 | MUST | &#x2713; | `openalexImportZenodo` |  |
+| P2 | SHOULD | &#x2717; | no `Config/openalexPro/standard` | add `Config/openalexPro/standard: 0.1` |
+| P3 | MUST | &#x2713; | `zenodo_as_corpus()` |  |
+| P4 | MUST | &#x2717; | no test calls `openalexAPI::prepare_corpus()` | add one on the example corpus (P7) |
+| P5 | MUST | n/a | applies to consumer |  |
+| P6 | SHOULD | &#x2717; | no `CITATION.cff`; no pkgdown site (`_pkgdown.yml`) | add them |
+| P7 | MUST | &#x2717; | no `zenodo_example_corpus()` exported | export it: writes a small compliant corpus offline, returns the corpus folder |
+| K1 | MUST | not verified | no example corpus (P7) |  |
+| K2 | MUST | not verified | no example corpus (P7) |  |
+| K3 | MAY | not verified | no example corpus (P7) |  |
+| K4 | MUST | not verified | no example corpus (P7) |  |
+| A1 | MUST | n/a | applies to consumer, transformer, annotator |  |
+| A2 | MUST | n/a | applies to consumer, transformer, annotator |  |
+| A3 | MUST | n/a | applies to consumer, transformer, annotator |  |
+| T1 | MUST | n/a | applies to transformer |  |
+| T2 | MUST | n/a | applies to transformer, annotator |  |
+| T3 | MUST | n/a | applies to transformer |  |
+| N1 | MUST | n/a | applies to annotator |  |
+| N2 | MUST | n/a | applies to annotator |  |
+| N3 | MUST | n/a | applies to annotator |  |
+| C1 | MUST | n/a | applies to consumer |  |
+| C2 | MUST | n/a | applies to consumer |  |
+| API | MUST | not verified | no example corpus (P7) |  |
 
 ## Provenance
 
-Not derived (writer): the corpus is built from Zenodo records, no `derived_from`.
-
-## Onboarding steps
-
-- [x] Writer prefix registered in STANDARD.md I5 (`zenodo`)
-- [ ] `Config/openalexPro/standard: 0.1` in DESCRIPTION
-- [x] Row in `repos.tsv` (dependency order) and entry in `ecosystem.md`
-- [ ] Test running `openalexAPI::prepare_corpus()` on a small corpus (P4)
-- [ ] Landing page / org profile / r-universe — only once out of alpha
-
-## Notes
-
-- K3, K4 and the `_query.json` timestamps (Q5) were clarified in STANDARD.md after
-  the first run of this report; the rows above follow the clarified rules.
+No corpus checked.
