@@ -4,7 +4,7 @@
 - **Package:** openalexImportZenodo 0.0.0.9000 · openalexPro/openalexImportZenodo @ dev 60f58cd
 - **Kind:** writer
 - **Date:** 2026-11-27
-- **Verdict:** not compliant (7 MUST, 2 SHOULD open)
+- **Verdict:** not compliant (8 MUST, 2 SHOULD open)
 
 **Corpus checked:** built with the package's own `zenodo_build()` and
 `zenodo_as_corpus()` from the stored IPBES community records (`ipbes_zenodo/raw/`,
@@ -39,22 +39,25 @@ a database from it without errors. The existing `ipbes_zenodo/corpus/` (built
 | Q2 | SHOULD | ✓ | `source` and `build` settings are enough for `zenodo_update()` | |
 | Q3 | SHOULD | ✓ | `_query.html` | |
 | Q4 | MUST | ✓ | `zenodo_as_corpus()` copies whole partitions | |
+| Q5 | MAY | ✓ | `_query.json` holds `started`/`finished`; allowed | |
 | I1 | MUST | n/a | no OpenAlex records | |
 | I2 | MUST | ✓ | all 567 ids are `zenodo:<n>` | |
 | I3 | MUST | ✗ | no `id_format` (no `_dataset.json`) | see D3 |
 | I4 | SHOULD | ✓ | `ids.doi`, `ids.zenodo` | consider `ids.zenodo` = `zenodo:<n>` instead of the record URL |
 | I5 | MUST | ✓ | prefix `zenodo` registered | |
 | I6 | SHOULD | ✓ | `https://doi.org/…`, 0 upper-case | |
+| I7 | MUST | ✓ | `zenodo` is not a scheme name | |
 | P1 | MUST | ✓ | `openalexImport<Source>` | |
 | P2 | MUST/SHOULD | ✗ (SHOULD) | does not call openalexPro (no floor needed); no `Config/openalexPro/standard` | add `Config/openalexPro/standard: 0.1` |
 | P3 | MUST | ✓ | `zenodo_as_corpus(project_folder, out, name)` (`R/update.R:47`) | |
 | P4 | MUST | ✗ | no test runs `openalexAPI::prepare_corpus()` | add one on the fixture corpus; openalexAPI in Suggests |
 | P5 | MUST | n/a | not a reader | |
 | P6 | MUST/SHOULD | ✗ (SHOULD) | MIT ✓, `repos.tsv` ✓, `dev` ✓; no `CITATION.cff`, no pkgdown site | add both (planned with the first release) |
+| P7 | MUST | ✗ | no `zenodo_example_corpus()`; test fixtures are raw API responses (`tests/testthat/fixtures/hit_real.json`) | export `zenodo_example_corpus(out)` building from a few stored records shipped in `inst/extdata` |
 | K1 | MUST | ✗ | required columns ✓; extra columns `relation`, `relation_declared`, `scheme`, `related_type`, `declared_on` have no prefix | rename to `zenodo_*` |
 | K2 | MUST | ✓ / not verified | `parquet_split = "none"` writes a file even with zero rows; numeric and partitioned splits write none | write an empty file with the schema in those modes |
-| K3 | MUST | ✗ | 14 citation links between corpus works also in `referenced_works` | drop them from the link table, or the standard allows it (see Notes) |
-| K4 | MUST | ✗ | `origin`/`target` outside the corpus are DOI URLs (`https://doi.org/…`) | standard gap, see Notes |
+| K3 | MAY | ✓ | 14 citation links between corpus works also in `referenced_works`; repeating is allowed | |
+| K4 | MUST | ✗ | outside ends: 141 DOI URLs, 54 URLs ✓; 2 `handle` and 1 `isbn` are bare identifiers (the scheme is only in the `scheme` column) | write `handle:…`, `isbn:…`, i.e. `<scheme>:<identifier>` for every scheme other than `doi` and `url` |
 | A1 | MUST | n/a | writer only; reads no corpus (§8) | |
 | A2 | MUST | n/a | writer only; reads no corpus (§8) | |
 | A3 | MUST | n/a | writer only; reads no corpus (§8) | |
@@ -77,12 +80,5 @@ a database from it without errors. The existing `ipbes_zenodo/corpus/` (built
 
 ## Notes
 
-- **K4 is a gap in the standard.** A link to something outside the corpus has no §5 ID;
-  a DOI (or another URL) is the natural value. K4 should say: IDs of corpus records
-  follow §5, others are a DOI or URL.
-- **K3 vs. openalexAPI's `cites:` filter.** Zenodo puts in-corpus citations in
-  `referenced_works` *and* the link table, so the link table is complete on its own.
-  Decide whether K3 means "must not repeat" or "need not repeat".
-- **`_query.json` carries timestamps** (`started`, `finished`). Fine under D2 (which only
-  covers `_dataset.json`), but it changes on every update, so `targets` pipelines
-  that track the whole folder rebuild. Worth a line in the standard.
+- K3, K4 and the `_query.json` timestamps (Q5) were clarified in STANDARD.md after
+  the first run of this report; the rows above follow the clarified rules.

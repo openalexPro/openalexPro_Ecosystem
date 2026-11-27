@@ -22,7 +22,8 @@ extra top-level files and the reports can be compared.
    (writes data keyed by `id`: openalexVectorComp). Rules that do not apply to its
    kinds are `n/a` with a reason, not left out.
 4. **Run the checks** as described in the `openalex-ecosystem-standard` skill: package
-   checks on the source, corpus checks on a corpus it writes. To get a corpus, use a
+   checks on the source, corpus checks on a corpus it writes. To get a corpus, use
+   `<prefix>_example_corpus()` (P7) when the package has it, else a
    test fixture, `inst/extdata`, or a small run of its `<source>_as_corpus()` into
    the scratchpad — never write into the package or a user's project. If none is
    possible, mark the corpus rules `not verified` and say why. For consumers,
@@ -58,6 +59,7 @@ following the package's own branching rules (`claude/<description>` from `dev`).
 - [ ] Prefix registered in STANDARD.md I5 (proposed: `<prefix>`) — writers, transformers, annotators
 - [ ] `Config/openalexPro/standard: <version>` in DESCRIPTION
 - [ ] Row in `repos.tsv` (dependency order) and entry in `ecosystem.md`
+- [ ] `<prefix>_example_corpus(out)`, offline (P7) — writers, transformers
 - [ ] Test running `openalexAPI::prepare_corpus()` on a small corpus (P4) — writers, transformers
 - [ ] Test reading a non-OpenAlex corpus (A2) — consumers, transformers, annotators
 - [ ] Landing page / org profile / r-universe — only once out of alpha

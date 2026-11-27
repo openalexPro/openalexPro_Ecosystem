@@ -48,6 +48,10 @@ f <- list.files(corpus, "\\.parquet$", recursive = TRUE, full.names = TRUE)
   `<prefix>_` or is a reserved name.
 - K1/K2: `links/query=<name>/*.parquet` exists next to the corpus for every partition,
   with the K1 columns (zero rows is fine).
+- K4: each `origin`/`target` is a corpus `id` (when `*_in_corpus`), else
+  `https://doi.org/…`, another URL, or `<scheme>:…` with an I7 scheme. Group the
+  outside ends by form and list anything else (e.g. a bare ISBN).
+- I5/I7: the writer's prefix is registered and is not a scheme name.
 - The real test: `openalexAPI::prepare_corpus(corpus, cache_dir = tempfile())` succeeds
   (when openalexAPI is installed). Use a temp `cache_dir` so nothing is left in the project.
 
@@ -56,7 +60,9 @@ f <- list.files(corpus, "\\.parquet$", recursive = TRUE, full.names = TRUE)
 - P1 name, P2 `openalexPro (>= …)` floor (and `Config/openalexPro/standard`), P3
   `<source>_as_corpus()` exported (import packages), P4 test calling
   `prepare_corpus()`, P5 export packages do not require `_dataset.json` or
-  openalexPro-only columns, P6 licence + `repos.tsv` row.
+  openalexPro-only columns, P6 licence + `repos.tsv` row, P7
+  `<prefix>_example_corpus(out)` exported (writers, transformers) and runs offline —
+  when it exists, use it as the corpus for the corpus checks.
 - Grep the writer code for: the partition key it writes, files it puts in the corpus
   folder, whether it writes `_dataset.json` / `_query.json` / `_query.html`, and how it
   forms `id`.

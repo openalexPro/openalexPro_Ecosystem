@@ -118,6 +118,10 @@ wrote it.
   `_query_oql.txt` / `_query_oql.html`.
 - **Q4** Both MUST survive conversion steps (e.g. openalexPro copies `_query.json` into
   the Parquet partition so it outlives `delete_input`).
+- **Q5** Unlike `_dataset.json` (D2), `_query.json` and `_query.html` MAY hold
+  run-dependent values (start and end times, request counts), so they change on every
+  update. Pipelines that track a corpus for changes (e.g. `targets`) SHOULD track its
+  `*.parquet` files and `_dataset.json`, not the whole folder.
 
 ## 5. Identifiers
 
@@ -130,7 +134,8 @@ wrote it.
 - **I4** `ids` SHOULD carry known external identifiers (`doi`, `<prefix>`).
   `ids.openalex` is set only once the record has been matched to OpenAlex.
 - **I5** Prefixes are registered here, one per writer package, lowercase `[a-z0-9]+`.
-  The same prefix names the writer's extra columns (S5).
+  The same prefix names the writer's extra columns (S5). It MUST NOT be a scheme
+  name (I7).
 
   | Prefix | Writer |
   |---|---|
@@ -141,6 +146,12 @@ wrote it.
   | `zotero` | openalexImportZotero (planned) |
 
 - **I6** DOIs, where present, use the OpenAlex form `https://doi.org/<doi>`, lowercase.
+- **I7** Identifier schemes, for `ids` keys (I4) and for link ends outside the corpus
+  (K4): the lowercase names of DataCite's `relatedIdentifierType` (`ark`, `arxiv`,
+  `bibcode`, `doi`, `ean13`, `eissn`, `handle`, `igsn`, `isbn`, `issn`, `istc`,
+  `lissn`, `lsid`, `pmid`, `purl`, `upc`, `url`, `urn`, `w3id`) plus `openalex`,
+  `orcid`, `ror`. These names are reserved: no writer prefix (I5) may equal one, so a
+  `<scheme>:` value is never mistaken for a corpus ID.
 
 ## 6. Package requirements
 
@@ -159,6 +170,12 @@ wrote it.
 - **P6** Repository conventions: MUST use the MIT licence and be listed in `repos.tsv`
   (see `ecosystem.md`); SHOULD have a `dev` default branch with `main` for releases,
   a `CITATION.cff` and a pkgdown site.
+- **P7** Writer and transformer packages MUST export `<prefix>_example_corpus(out)`:
+  it writes a small corpus (with its link table) following §1–§7 to `out` and returns
+  `out`, offline — from data shipped in the package, no network, no API key. Tests
+  (P4) and the compliance workflow
+  ([#4](https://github.com/openalexPro/openalexPro_Ecosystem/issues/4)) check this
+  corpus.
 
 ## 7. Link table
 
@@ -169,10 +186,18 @@ wrote it.
   Extra columns follow S5.
 - **K2** The table MAY have zero rows, but the file and its columns MUST exist, so
   readers never have to check whether there is one.
-- **K3** It holds only relations not already in the works columns. Citations between
-  OpenAlex works stay in `referenced_works` and are not repeated here (for a
-  snapshot-sized corpus that would be hundreds of millions of rows).
-- **K4** `origin` and `target` follow §5.
+- **K3** Relations already in the works columns (e.g. citations in
+  `referenced_works`) need not be repeated here; a writer MAY repeat them so its link
+  table is complete on its own. openalexPro does not copy `referenced_works` into it
+  (for a snapshot-sized corpus that would be hundreds of millions of rows).
+- **K4** `origin` and `target` use one identifier form for everything:
+  - a record **in the corpus**: its `id` (§5);
+  - **outside** the corpus: a DOI as `https://doi.org/<doi>` (I6), a URL as is, else
+    `<scheme>:<identifier>` with a scheme from I7 (e.g. `isbn:9780000000000`,
+    `arxiv:2101.00001`, `handle:10419/12345`, `pmid:12345678`).
+
+  Something with no identifier at all is not a link; it stays in a prefixed works
+  column (e.g. `zenodo_references`).
 
 ## 8. Analysis and processing packages
 
