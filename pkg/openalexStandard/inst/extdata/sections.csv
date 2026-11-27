@@ -1,0 +1,10 @@
+section,heading,why
+1,1. Corpus layout,Readers find the data (and only the data) in the same place in every corpus.
+2,2. Works schema,Any reader can rely on the OpenAlex column names and types; extra columns cannot collide.
+3,3. `_dataset.json` — dataset marker,The folder is recognisable as a corpus and says who wrote it and how its ids look.
+4,4. `_query.json` and `_query.html` — per-query provenance,Every partition says how its records were obtained; methods sections can cite it.
+5,5. Identifiers,Ids from different writers never collide and can be matched across corpora.
+6,6. Package requirements,Packages can be installed and tested together and their output checked automatically.
+7,7. Link table,Relations between records are read the same way for every corpus.
+8,8. Analysis and processing packages,Packages that read corpora work with every compliant corpus and leave inputs untouched.
+check,,openalexAPI is the reference reader: a corpus it cannot read is not usable in the ecosystem.

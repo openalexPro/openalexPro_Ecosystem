@@ -21,3 +21,9 @@ test_that("prefixes and schemes match STANDARD.md", {
   expect_setequal(standard_schemes(), sch)
   expect_equal(standard_version(), sub("^\\*\\*Version:\\*\\* ([0-9.]+).*$", "\\1", grep("^\\*\\*Version", std(), value = TRUE)))
 })
+
+test_that("section headings exist in STANDARD.md", {
+  h <- sub("^#+ ", "", grep("^## ", std(), value = TRUE))
+  s <- openalexStandard:::sections()
+  expect_true(all(stats::na.omit(s$heading) %in% h))
+})

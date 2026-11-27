@@ -1,7 +1,7 @@
 # Shared helpers: rule data, result rows, DuckDB, small file utilities.
 
 ext <- function(f) system.file("extdata", f, package = "openalexStandard", mustWork = TRUE)
-read_ext <- function(f) utils::read.csv(ext(f), stringsAsFactors = FALSE, na.strings = "")
+read_ext <- function(f) utils::read.csv(ext(f), stringsAsFactors = FALSE, na.strings = "", encoding = "UTF-8")
 
 #' Version of STANDARD.md the checks implement
 #' @return A string, e.g. `"0.1"`.

@@ -24,7 +24,7 @@ Q3,SHOULD,4,writer;transformer,yes,Each partition has _query.html
 Q4,MUST,4,writer;transformer,partly,_query files survive conversion
 Q5,MAY,4,writer;transformer,yes,_query files may hold run-dependent values
 I1,MUST,5,writer;transformer,yes,OpenAlex ids are OpenAlex URLs
-I2,MUST,5,writer;transformer,yes,Other ids are <prefix>:<part>…
+I2,MUST,5,writer;transformer,yes,Other ids are `<prefix>:<part>...`
 I3,MUST,5,writer;transformer,yes,id_format declared and matching
 I4,SHOULD,5,writer;transformer,yes,ids carries external identifiers
 I5,MUST,5,writer;transformer;annotator,yes,Prefix registered
@@ -32,11 +32,11 @@ I6,SHOULD,5,writer;transformer,yes,DOIs as lowercase https://doi.org/
 I7,MUST,5,writer;transformer;annotator,yes,Prefix is not a scheme name
 P1,MUST,6,writer;consumer;transformer;annotator,yes,Package name
 P2,MUST,6,writer;consumer;transformer;annotator,yes,openalexPro floor; standard version declared
-P3,MUST,6,writer,yes,Import packages export <source>_as_corpus()
+P3,MUST,6,writer,yes,Import packages export `<source>_as_corpus()`
 P4,MUST,6,writer,partly,Test runs openalexAPI::prepare_corpus()
 P5,MUST,6,consumer,manual,Consumers accept any compliant corpus
 P6,MUST,6,writer;consumer;transformer;annotator,yes,MIT licence; repos.tsv; dev/main; CITATION.cff; pkgdown
-P7,MUST,6,writer;transformer,yes,Exports <prefix>_example_corpus(out)
+P7,MUST,6,writer;transformer,yes,Exports `<prefix>_example_corpus(out)`
 K1,MUST,7,writer;transformer,yes,Link table with the required columns
 K2,MUST,7,writer;transformer,yes,Link table exists even with zero rows
 K3,MAY,7,writer;transformer,yes,Links may repeat works-column relations
