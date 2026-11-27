@@ -1,0 +1,190 @@
+# openalexPro Ecosystem Standard
+
+**Version:** 0.1 (draft) · **Issue:** [openalexPro_Ecosystem#3](https://github.com/openalexPro/openalexPro_Ecosystem/issues/3)
+
+What a package must do to be part of the openalexPro ecosystem. The goal: **any corpus
+works with any consumer**. openalexPro is the reference **writer**, openalexAPI the
+reference **reader**. A package belongs to the ecosystem when both accept its output
+without special handling.
+
+MUST / SHOULD / MAY as in RFC 2119. The Claude skill in
+`.claude/skills/openalex-ecosystem-standard/` checks packages and corpora against this
+document; keep the two in step.
+
+---
+
+## 1. Corpus layout
+
+```
+<project>/
+├── <corpus>/                  the folder a reader is given (openalexPro: parquet/)
+│   ├── _dataset.json          dataset marker (§3)
+│   └── query=<name>/          one partition per query or source
+│       ├── _query.json        per-query record (§4)
+│       ├── _query.html        human-readable description (§4)
+│       └── *.parquet          works
+├── links/                     link table, may be empty (§7)
+│   └── query=<name>/*.parquet
+└── API/                       openalexAPI's cache (written by the reader, not the writer)
+```
+
+- **L1** Data MUST be Parquet files (`*.parquet`) below `<corpus>/`, at any depth.
+- **L2** The top partition key MUST be `query=` (Hive style, `query=<name>/`). Deeper
+  levels MAY use further keys (openalexPro: `query_l2=`, …).
+- **L3** `<name>` is chosen by the writer and has no fixed meaning across the
+  ecosystem. It MUST be a valid folder name on all platforms, and it SHOULD be
+  meaningful to a user, because readers may show it (L5).
+- **L4** Every file in `<corpus>/` that is not works data MUST start with `_`
+  (arrow, DuckDB and `**/*.parquet` globs then skip it). No CSV, lookup tables or
+  logs without the prefix.
+- **L5** The partition keys are part of the data: a record in `query=climate/`
+  belongs to the query `climate` (e.g. to compare or filter the queries of one
+  project). Readers MAY expose them as columns (Hive partitioning).
+  - **L5a** A work can be in several partitions. A reader that deduplicates (S6)
+    MUST keep all its partition values (e.g. `query` as a list), not one of them.
+  - **L5b** Writers MUST NOT write a data column named like a partition key
+    (`query`, `query_l2`, …), so the two never collide.
+  - **L5c** Readers MUST accept corpora whose partitions have different depths or
+    keys (missing keys are NA).
+  - Today openalexAPI reads with `hive_partitioning = false` and ignores the keys
+    ([openalexAPI#12](https://github.com/openalexPro/openalexAPI/issues/12)).
+
+## 2. Works schema
+
+- **S1** Every works file MUST have an `id` column and a `title` or `display_name`
+  column. Files without them are skipped by openalexAPI.
+- **S2** Columns that exist in the OpenAlex works schema MUST keep its names and
+  structure (e.g. `primary_location.source.display_name`, `authorships[]`).
+- **S3** These columns, when present, SHOULD have these types (openalexAPI casts back
+  what it can, and warns):
+
+  | Column | Type |
+  |---|---|
+  | `publication_year` | integer |
+  | `publication_date` | DATE |
+  | `cited_by_count` | integer |
+  | `fwci` | double |
+  | `is_retracted`, `is_paratext` | boolean |
+  | `abstract_inverted_index` | `MAP(VARCHAR, BIGINT[])` |
+
+- **S4** A plain-text `abstract` column MAY be written instead of, or as well as,
+  `abstract_inverted_index`.
+- **S5** Extra columns (not in the OpenAlex schema) MUST be named
+  `<prefix>_<name>`, where `<prefix>` is the writer's registered prefix (§5, I5), e.g.
+  `zenodo_related`, `policy_fulltext`. Readers MAY ignore them, or serve them as they are.
+- **S5a** Reserved names, written by openalexPro without a prefix and known to readers:
+  `abstract`, `citation`, `relevance_score`, and `page` (deprecated: written but read
+  nowhere, removal tracked in [openalexPro#97](https://github.com/openalexPro/openalexPro/issues/97)). No other writer may use them for anything
+  else.
+- **S6** `id` MUST be unique within a partition. Duplicates across partitions are
+  allowed (readers deduplicate).
+
+## 3. `_dataset.json` — dataset marker
+
+One per `<corpus>/` folder. It identifies the folder as an ecosystem corpus and says who
+wrote it.
+
+- **D1** Every writer MUST write it, and only writers write it (readers never create it).
+- **D2** Content MUST be deterministic: no timestamps, run ids, host names or absolute
+  paths, so rewriting an unchanged corpus leaves it byte-identical (keeps `targets`
+  pipelines valid).
+- **D3** Required fields:
+
+  ```json
+  {
+    "standard": "0.1",
+    "type": "works",
+    "writer": { "package": "openalexImportPolicy", "version": "0.2.0", "prefix": "policy" },
+    "partition_keys": ["query"],
+    "id_format": "policy:<source>:<document id>"
+  }
+  ```
+
+  `id_format` is the writer's template for `id` (§5, I2); for OpenAlex records it is
+  `"https://openalex.org/<id>"`. A corpus mixing writers lists them per partition under
+  `"queries"` instead:
+  `{"queries": {"<name>": {"writer": {…}, "id_format": "…"}}}`.
+- **D4** Existing corpora are not retrofitted automatically; readers MUST work without
+  the file.
+
+## 4. `_query.json` and `_query.html` — per-query provenance
+
+- **Q1** Each `query=<name>/` partition MUST carry `_query.json` describing how its
+  records were obtained (query, source, settings). Its content is free-form per source.
+- **Q2** It SHOULD be enough to repeat or update the download.
+- **Q3** Each partition SHOULD carry `_query.html`: a self-contained, human-readable
+  description for methods sections. openalexPro additionally writes
+  `_query_oql.txt` / `_query_oql.html`.
+- **Q4** Both MUST survive conversion steps (e.g. openalexPro copies `_query.json` into
+  the Parquet partition so it outlives `delete_input`).
+
+## 5. Identifiers
+
+- **I1** OpenAlex records: `id` is the OpenAlex URL (`https://openalex.org/W…`).
+- **I2** Records from other sources: `id` is `<prefix>:<part>[:<part>…]`. The first
+  part MUST be the writer's registered prefix (I5); the parts after it are the writer's
+  choice (e.g. `policy:cbd:12345`, `zenodo:<group>:<conceptrecid>`). No part may
+  contain `/` (openalexAPI matches IDs on the part after the last `/`).
+- **I3** The writer MUST declare its template in `_dataset.json` as `id_format` (D3).
+- **I4** `ids` SHOULD carry known external identifiers (`doi`, `<prefix>`).
+  `ids.openalex` is set only once the record has been matched to OpenAlex.
+- **I5** Prefixes are registered here, one per writer package, lowercase `[a-z0-9]+`.
+  The same prefix names the writer's extra columns (S5).
+
+  | Prefix | Writer |
+  |---|---|
+  | `oapro` | openalexPro (future extra columns; its IDs stay OpenAlex URLs, I1) |
+  | `policy` | openalexImportPolicy |
+  | `zenodo` | openalexImportZenodo |
+  | `iisd` | openalexImportIISD (planned) |
+  | `zotero` | openalexImportZotero (planned) |
+
+- **I6** DOIs, where present, use the OpenAlex form `https://doi.org/<doi>`, lowercase.
+
+## 6. Package requirements
+
+- **P1** Names: `openalexImport<Source>` (writes a corpus from a non-OpenAlex source),
+  `openalexExport<Target>` (reads a corpus into another format); other names are
+  free.
+- **P2** `DESCRIPTION` MUST declare `openalexPro (>= x.y.z)` with a real floor when it
+  calls openalexPro, and SHOULD declare the standard version it follows
+  (`Config/openalexPro/standard: 0.1`).
+- **P3** Import packages export a `<source>_as_corpus(…, out)` function that writes a
+  corpus following §1–§5.
+- **P4** Import packages MUST have a test that writes a small corpus and runs
+  `openalexAPI::prepare_corpus()` on it (skipped when openalexAPI is not installed).
+- **P5** Export packages MUST accept any corpus following this standard, not only
+  openalexPro output, and MUST NOT require `_dataset.json` (D4).
+- **P6** Repository conventions: MUST use the MIT licence and be listed in `repos.tsv`
+  (see `ecosystem.md`); SHOULD have a `dev` default branch with `main` for releases,
+  a `CITATION.cff` and a pkgdown site.
+
+## 7. Link table
+
+- **K1** Every writer MUST write `links/query=<name>/*.parquet` next to `<corpus>/`, one
+  partition per corpus partition, shaped like OpenAlex `/links`: columns `origin`,
+  `target`, `link_type` (an `https://openalex.org/link-types/…` URL, or NA when the
+  relation has no OpenAlex type), `origin_in_corpus`, `target_in_corpus` (boolean).
+  Extra columns follow S5.
+- **K2** The table MAY have zero rows, but the file and its columns MUST exist, so
+  readers never have to check whether there is one.
+- **K3** It holds only relations not already in the works columns. Citations between
+  OpenAlex works stay in `referenced_works` and are not repeated here (for a
+  snapshot-sized corpus that would be hundreds of millions of rows).
+- **K4** `origin` and `target` follow §5.
+
+---
+
+## Current compliance (2026-11-27)
+
+| Package | L2 `query=` | L4 `_` files | S5 prefixes | `_dataset.json` | `_query.json` | I2 IDs | K1 links |
+|---|---|---|---|---|---|---|---|
+| openalexPro | ✓ | ✓ | ✓ (S5a) | ✗ | ✓ | ✓ | ✗ |
+| openalexImportZenodo | ✓ | ✓ | to check | ✗ | ✓ | ✓ | ✓ |
+| openalexImportPolicy | ✗ `source=` | ✗ `doc_types.csv` | ✗ `fulltext`, `country_iso3`, … | ✗ | ✗ | ✗ `cbd:…` → `policy:cbd:…` | ✗ |
+| openalexAPI (reader) | ✗ keys ignored (L5) | ✓ | serves as is | n/a | n/a | ✓ | not read |
+
+## Changes
+
+- **0.1** (2026-11-27) First draft. Decisions recorded in
+  [#3](https://github.com/openalexPro/openalexPro_Ecosystem/issues/3).

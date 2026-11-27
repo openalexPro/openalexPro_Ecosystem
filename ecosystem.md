@@ -309,3 +309,5 @@ volume mount point, so it has no relative form.
   against the official OpenAlex parquet, the decision to drop the Rust backend in
   favour of pure R with enrich-on-extract, cross-package defects, and the version
   numbering scheme.
+* `STANDARD.md` — what a package and its corpora must look like to be part of the
+  ecosystem; checked by the `openalex-ecosystem-standard` skill in `.claude/skills/`.
