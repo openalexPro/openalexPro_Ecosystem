@@ -177,7 +177,9 @@ jobs:
           git add compliance
           if git diff --cached --quiet; then echo "No report changed."; exit 0; fi
           git commit -m "compliance: $(ls artifacts | sed 's/^report-//' | paste -sd ' ' -)"
-          git push
+          # main may have moved during the run; the bot only touches compliance/
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && exit 0; sleep 5; done
+          exit 1
       - uses: actions/configure-pages@v5
       - uses: actions/jekyll-build-pages@v1
         with:
