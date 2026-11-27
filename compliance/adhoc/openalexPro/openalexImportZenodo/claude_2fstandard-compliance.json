@@ -1,0 +1,384 @@
+{
+  "meta": {
+    "package": "openalexImportZenodo",
+    "version": "0.0.0.9000",
+    "repo": "openalexPro/openalexImportZenodo",
+    "ref": "claude/standard-compliance",
+    "commit": "542fad02e15e6bca1f5dab6b678f97781ca72b9b",
+    "standard": "0.1",
+    "checker": "0.1.0",
+    "kind": "writer",
+    "prefix": "zenodo",
+    "corpus": "built with `zenodo_example_corpus()`",
+    "must_open": 0,
+    "should_open": 1,
+    "verdict": "compliant"
+  },
+  "results": [
+    {
+      "rule": "L1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "1 Parquet file(s)",
+      "fix": ""
+    },
+    {
+      "rule": "L2",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "1 `query=` partition(s)",
+      "fix": ""
+    },
+    {
+      "rule": "L3",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "L4",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "L5a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "L5b",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "L5c",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "S1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "1 works file(s)",
+      "fix": ""
+    },
+    {
+      "rule": "S2",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "names and top-level types (nested fields not checked)",
+      "fix": ""
+    },
+    {
+      "rule": "S3",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "S5",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "21 prefixed extra column(s)",
+      "fix": ""
+    },
+    {
+      "rule": "S5a",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "reserved: `abstract` (meaning not checked)",
+      "fix": ""
+    },
+    {
+      "rule": "S6",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "D1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "D2",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "D3",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "D4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "D5",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "sha256:fe7a523f3f0eb0bc5e6233ac0a7c6aaeb2c91afeda259be608c441d3989e915a",
+      "fix": ""
+    },
+    {
+      "rule": "Q1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "Q2",
+      "level": "SHOULD",
+      "status": "manual",
+      "evidence": "is `_query.json` enough to repeat the download? (review)",
+      "fix": ""
+    },
+    {
+      "rule": "Q3",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "Q4",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "present in the delivered corpus",
+      "fix": ""
+    },
+    {
+      "rule": "I1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "no OpenAlex ids",
+      "fix": ""
+    },
+    {
+      "rule": "I2",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "7 ids with prefix `zenodo`",
+      "fix": ""
+    },
+    {
+      "rule": "I3",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`zenodo:<conceptrecid, or recid with versions = 'all'>`",
+      "fix": ""
+    },
+    {
+      "rule": "I4",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "I5",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`zenodo`",
+      "fix": ""
+    },
+    {
+      "rule": "I6",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "I7",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "P1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`openalexImportZenodo`",
+      "fix": ""
+    },
+    {
+      "rule": "P2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "does not use openalexPro",
+      "fix": ""
+    },
+    {
+      "rule": "P2a",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "standard 0.1",
+      "fix": ""
+    },
+    {
+      "rule": "P3",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`zenodo_as_corpus()`",
+      "fix": ""
+    },
+    {
+      "rule": "P4",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "test: testthat/test-compliance.R:10",
+      "fix": ""
+    },
+    {
+      "rule": "P6",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "MIT; listed",
+      "fix": ""
+    },
+    {
+      "rule": "P6a",
+      "level": "SHOULD",
+      "status": "fail",
+      "evidence": "no `CITATION.cff`; no pkgdown site (`_pkgdown.yml`)",
+      "fix": "add them"
+    },
+    {
+      "rule": "P7",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`zenodo_example_corpus()`",
+      "fix": ""
+    },
+    {
+      "rule": "P7a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "K1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "1 link file(s)",
+      "fix": ""
+    },
+    {
+      "rule": "K2",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "K4",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "3 outside end(s), all DOI/URL/`<scheme>:`",
+      "fix": ""
+    },
+    {
+      "rule": "A1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "A2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "T1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer",
+      "fix": ""
+    },
+    {
+      "rule": "T2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "T3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer",
+      "fix": ""
+    },
+    {
+      "rule": "N1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "C1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer",
+      "fix": ""
+    },
+    {
+      "rule": "API",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`prepare_corpus()` builds the database",
+      "fix": ""
+    }
+  ],
+  "provenance": [
+    {
+      "level": 0,
+      "path": ".",
+      "writer": "openalexImportZenodo",
+      "checksum": null
+    }
+  ]
+}
