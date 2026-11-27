@@ -7,9 +7,10 @@ works with any consumer**. openalexPro is the reference **writer**, openalexAPI 
 reference **reader**. A package belongs to the ecosystem when both accept its output
 without special handling.
 
-MUST / SHOULD / MAY as in RFC 2119. The Claude skill in
-`.claude/skills/openalex-ecosystem-standard/` checks packages and corpora against this
-document; keep the two in step.
+MUST / SHOULD / MAY as in RFC 2119. Two Claude skills in `.claude/skills/` use this
+document: `openalex-ecosystem-standard` checks a package or corpus, and
+`openalex-compliance-report` writes a full report to `compliance/<package>.md` for a
+package joining the ecosystem. Keep them in step with this document.
 
 ---
 
