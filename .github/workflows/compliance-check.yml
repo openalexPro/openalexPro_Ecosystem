@@ -40,10 +40,12 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           dependencies: '"hard"'
+          # PRs into dev / pushes to dev: openalexPro and openalexAPI from dev; else r-universe and openalexAPI@main
           extra-packages: |
             github::openalexPro/openalexPro_Ecosystem/pkg/openalexStandard
             any::pkgload
-            github::openalexPro/openalexAPI
+            github::openalexPro/openalexAPI@${{ (github.base_ref || github.ref_name) == 'dev' && 'dev' || 'main' }}
+            ${{ (github.base_ref || github.ref_name) == 'dev' && 'github::openalexPro/openalexPro@dev' || '' }}
           cache-version: compliance-check-1
       - name: Check
         env:

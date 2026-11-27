@@ -1,5 +1,8 @@
 # Checks packages against STANDARD.md and publishes the reports on GitHub Pages.
 #
+# Dependencies: `main` (and one-off refs) use openalexPro from its r-universe and
+# openalexAPI@main; `dev` uses openalexPro@dev and openalexAPI@dev from GitHub.
+#
 # Daily at 00:00 UTC, and on demand. A repository/branch is checked only when its
 # head commit, STANDARD.md or pkg/openalexStandard changed since its last check
 # (compliance/state.json), unless `force` is set. Watched: the r-package rows of
@@ -93,11 +96,14 @@ jobs:
         with:
           working-directory: target
           dependencies: '"hard"'
+          # main (and one-off refs): ecosystem dependencies from r-universe, openalexAPI@main;
+          # dev: openalexPro and openalexAPI from their dev branches
           extra-packages: |
             local::../eco/pkg/openalexStandard
             any::pkgload
-            github::openalexPro/openalexAPI
-          cache-version: compliance-1
+            github::openalexPro/openalexAPI@${{ matrix.branch == 'dev' && 'dev' || 'main' }}
+            ${{ matrix.branch == 'dev' && 'github::openalexPro/openalexPro@dev' || '' }}
+          cache-version: compliance-1-${{ matrix.branch == 'dev' && 'dev' || 'main' }}
       - name: Check
         id: check
         if: env.PKG == 'true' && steps.deps.outcome == 'success'

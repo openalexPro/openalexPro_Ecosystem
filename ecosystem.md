@@ -316,6 +316,11 @@ volume mount point, so it has no relative form.
 | PR check | `.github/workflows/compliance-check.yml` | Reusable workflow (`workflow_call`) for any package repository, org or third party: report in the job summary, fails on MUST rules. |
 | Local | `make compliance` | Reports for the local clones into `scratch/compliance/`, no commit. |
 
+Dependencies follow the branch checked: `main` (and one-off refs) installs openalexPro
+from <https://openalexpro.r-universe.dev> and openalexAPI from its `main`; `dev`
+installs openalexPro and openalexAPI from their `dev` branches. The package itself is
+always checked at the exact commit.
+
 Watched repositories are the `r-package` rows of `repos.tsv` plus
 `compliance/external.tsv` (third-party packages, one `owner/name<TAB>branches` line
 each). On demand, any repository can be checked:
