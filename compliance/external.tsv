@@ -1,0 +1,3 @@
+repo	branches
+# Third-party repositories checked daily, e.g.:
+# someone/openalexImportFoo	main,dev

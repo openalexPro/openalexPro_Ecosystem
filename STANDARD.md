@@ -7,10 +7,13 @@ works with any consumer**. openalexPro is the reference **writer**, openalexAPI 
 reference **reader**. A package belongs to the ecosystem when both accept its output
 without special handling.
 
-MUST / SHOULD / MAY as in RFC 2119. Two Claude skills in `.claude/skills/` use this
-document: `openalex-ecosystem-standard` checks a package or corpus, and
-`openalex-compliance-report` writes a full report to `compliance/<package>.md` for a
-package joining the ecosystem. Keep them in step with this document.
+MUST / SHOULD / MAY as in RFC 2119. The rules are checked by the R package
+**openalexStandard** (`pkg/openalexStandard/`, usable in package tests), and the
+reports are published at <https://openalexpro.github.io/openalexPro_Ecosystem/>
+(daily, for every watched package's `main` and `dev`). Two Claude skills in
+`.claude/skills/` add the manual review: `openalex-ecosystem-standard` and
+`openalex-compliance-report`. A change to this document needs the same change in
+openalexStandard's rule data (`inst/extdata/`); its tests compare the two.
 
 ---
 
@@ -178,8 +181,9 @@ wrote it.
   (see `ecosystem.md`); SHOULD have a `dev` default branch with `main` for releases,
   a `CITATION.cff` and a pkgdown site.
 - **P7** Writer and transformer packages MUST export `<prefix>_example_corpus(out)`:
-  it writes a small corpus (with its link table) following §1–§7 to `out` and returns
-  `out`, offline — from data shipped in the package, no network, no API key. Tests
+  it writes a small corpus following §1–§7 below the project folder `out` (the corpus
+  folder and its sibling `links/`) and returns the path of the corpus folder, offline —
+  from data shipped in the package, no network, no API key. Tests
   (P4) and the compliance workflow
   ([#4](https://github.com/openalexPro/openalexPro_Ecosystem/issues/4)) check this
   corpus.
@@ -260,14 +264,9 @@ A package can be more than one kind.
 
 ---
 
-## Current compliance (2026-11-27)
+## Current compliance
 
-| Package | L2 `query=` | L4 `_` files | S5 prefixes | `_dataset.json` | `_query.json` | I2 IDs | K1 links |
-|---|---|---|---|---|---|---|---|
-| openalexPro | ✓ | ✓ | ✓ (S5a) | ✗ | ✓ | ✓ | ✗ |
-| openalexImportZenodo | ✓ | ✓ | to check | ✗ | ✓ | ✓ | ✓ |
-| openalexImportPolicy | ✗ `source=` | ✗ `doc_types.csv` | ✗ `fulltext`, `country_iso3`, … | ✗ | ✗ | ✗ `cbd:…` → `policy:cbd:…` | ✗ |
-| openalexAPI (reader) | ✗ keys ignored (L5) | ✓ | serves as is | n/a | n/a | ✓ | not read |
+See the published reports: <https://openalexpro.github.io/openalexPro_Ecosystem/>.
 
 ## Changes
 

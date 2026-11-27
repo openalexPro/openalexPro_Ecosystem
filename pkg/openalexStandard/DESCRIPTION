@@ -1,0 +1,30 @@
+Package: openalexStandard
+Title: Check Packages and Corpora Against the openalexPro Ecosystem Standard
+Version: 0.1.0
+Authors@R:
+    person("Rainer M.", "Krug", , "Rainer.Krug@sib.swiss", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7490-0066"))
+Description: Checks R packages and Parquet corpora against STANDARD.md of the
+    openalexPro ecosystem (corpus layout, works schema, provenance files,
+    identifiers, link table, package requirements) and writes compliance
+    reports. Used in package tests and by the ecosystem's compliance workflow.
+License: MIT + file LICENSE
+URL: https://github.com/openalexPro/openalexPro_Ecosystem
+BugReports: https://github.com/openalexPro/openalexPro_Ecosystem/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends: R (>= 4.5)
+Imports:
+    DBI,
+    duckdb,
+    jsonlite,
+    tools,
+    utils
+Suggests:
+    openalexAPI,
+    pkgload,
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3
+Config/openalexPro/standard: 0.1
+Config/roxygen2/version: 8.1.1

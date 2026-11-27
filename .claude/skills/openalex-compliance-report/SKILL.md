@@ -5,80 +5,49 @@ description: Write a compliance report for a package that wants to join (or is i
 
 # Ecosystem compliance report
 
-Produces `compliance/<package>.md` in the openalexPro_Ecosystem repo
-(`~/GitHub/openalexPro_Ecosystem`). All reports live there, so packages stay free of
-extra top-level files and the reports can be compared.
+Reports are produced by **openalexStandard** (`pkg/openalexStandard/` in the
+openalexPro_Ecosystem repo, `~/GitHub/openalexPro_Ecosystem`) and published at
+<https://openalexpro.github.io/openalexPro_Ecosystem/>. The `compliance` workflow
+re-checks the `main` and `dev` branches of every watched package daily at 00:00 UTC
+when the branch, `STANDARD.md` or the checker changed. Watched = the r-package rows of
+`repos.tsv` plus `compliance/external.tsv`.
 
-## Steps
+## Ways to get a report
 
-1. **Read `STANDARD.md`** (repo root) and note its version. Every rule id in it gets a
-   row in the report — none skipped, so a missing row never hides a missing check.
-2. **Locate the package**: a folder in the ecosystem root, another local path, or a
-   GitHub repo (clone it into the scratchpad, read-only). Record the commit
-   (`git rev-parse --short HEAD`) and branch checked.
-3. **Classify it** (STANDARD.md §8; often more than one): writer (`openalexImport*`,
-   openalexPro), consumer (`openalexExport*`, openalexConvert, openalexAPI),
-   transformer (writes a new corpus: openalexSnowball, openalexSnapshot), annotator
-   (writes data keyed by `id`: openalexVectorComp). Rules that do not apply to its
-   kinds are `n/a` with a reason, not left out.
-4. **Run the checks** as described in the `openalex-ecosystem-standard` skill: package
-   checks on the source, corpus checks on a corpus it writes. To get a corpus, use
-   `<prefix>_example_corpus()` (P7) when the package has it, else a
-   test fixture, `inst/extdata`, or a small run of its `<source>_as_corpus()` into
-   the scratchpad — never write into the package or a user's project. If none is
-   possible, mark the corpus rules `not verified` and say why. For consumers,
-   transformers and annotators also run the §8 checks: give the package a compliant
-   corpus from another writer (e.g. built by openalexImportZenodo) as input, in the
-   scratchpad, and check its output (annotation folder, derived corpus, link table).
-5. **Trace `derived_from`** (T2, N2): for the corpus or annotation checked, follow
-   `derived_from` back through each input's `_dataset.json` until an input has none
-   (`null` checksum, e.g. the OpenAlex snapshot or an openalexPro download). Recompute
-   each SHA-256 and flag a mismatch (the input changed after the output was built).
-   Put the chain in the report under "Provenance". No `derived_from` (writers): say so
-   in one line.
-6. **Write the report** (template below), then summarise it to the user in a few
-   lines: verdict, number of MUST failures, the first thing to fix.
+- **A watched package, published:** run the workflow on demand —
+  `gh workflow run compliance.yml -R openalexPro/openalexPro_Ecosystem -f repo=<owner/name> -f force=true`
+  (any `owner/name` works, also one that is not watched; `-f ref=<branch|tag|commit>`).
+  The report lands in `compliance/<owner>/<repo>/<branch>.md` and on the page.
+- **Locally, e.g. for a package not yet public or a work-in-progress branch:**
+  ```r
+  pkgload::load_all("~/GitHub/openalexPro_Ecosystem/pkg/openalexStandard")
+  compliance_report("<package source>", out_dir = "<scratchpad>/report",
+                    repo = "<owner/name>", ref = "<branch>", commit = "<sha>",
+                    manifest = "~/GitHub/openalexPro_Ecosystem/repos.tsv")
+  ```
+  It builds the package's example corpus (`<prefix>_example_corpus()`, P7) in a
+  temporary folder, checks it, and writes `report.md` / `report.json`. Never write into
+  the package or a user's project.
+
+## Then add what the code cannot check
+
+The report marks those rules `manual`. Review them as described in the
+`openalex-ecosystem-standard` skill (A1–A3, T3, C1, C2/P5/D4, L5*, Q2), and for
+consumers, transformers and annotators run the package on a compliant non-OpenAlex
+corpus in the scratchpad (A2). Add your findings under **Notes** of a local report, or
+summarise them to the user; do not edit published reports by hand (the next run
+overwrites them).
+
+Summarise to the user in a few lines: verdict, number of MUST failures, the first thing
+to fix, and — for a package that wants to join — the onboarding steps still open:
+
+- prefix registered in STANDARD.md I5 (writers, transformers, annotators);
+- `Config/openalexPro/standard: <version>` in DESCRIPTION;
+- `<prefix>_example_corpus(out)`, offline (P7) and a test running
+  `openalexAPI::prepare_corpus()` on it (P4) — writers, transformers;
+- a test reading a non-OpenAlex corpus (A2) — consumers, transformers, annotators;
+- a row in `repos.tsv` (ecosystem) or `compliance/external.tsv` (third party);
+- landing page / org profile / r-universe only once out of alpha.
 
 Do not change the package. Fixes go in the report; apply them only if the user asks,
 following the package's own branching rules (`claude/<description>` from `dev`).
-
-## Template
-
-```markdown
-# Compliance report: <package>
-
-- **Standard:** STANDARD.md <version>
-- **Package:** <package> <version> · <repo> @ <branch> <commit>
-- **Kind:** writer, consumer, transformer, annotator (all that apply)
-- **Date:** <YYYY-MM-DD>
-- **Verdict:** compliant | not compliant (<n> MUST, <m> SHOULD open)
-
-## Results
-
-| Rule | Level | Status | Evidence | Fix |
-|---|---|---|---|---|
-| L1 | MUST | ✓ / ✗ / n/a / not verified | `R/file.R:42`, or the path checked | what to change |
-| … one row per rule id in STANDARD.md, in document order … |
-
-## Provenance
-
-<output> ← <input> (`_dataset.json` sha256 ✓ / ✗ changed / none) ← … — or "not derived (writer)"
-
-## Onboarding steps
-
-- [ ] Prefix registered in STANDARD.md I5 (proposed: `<prefix>`) — writers, transformers, annotators
-- [ ] `Config/openalexPro/standard: <version>` in DESCRIPTION
-- [ ] Row in `repos.tsv` (dependency order) and entry in `ecosystem.md`
-- [ ] `<prefix>_example_corpus(out)`, offline (P7) — writers, transformers
-- [ ] Test running `openalexAPI::prepare_corpus()` on a small corpus (P4) — writers, transformers
-- [ ] Test reading a non-OpenAlex corpus (A2) — consumers, transformers, annotators
-- [ ] Landing page / org profile / r-universe — only once out of alpha
-
-## Notes
-
-Anything the standard does not cover but should — candidates for an issue in
-openalexPro_Ecosystem.
-```
-
-A re-run overwrites the report; git history in the ecosystem repo keeps the earlier
-ones. Commit it only when the user asks (the ecosystem repo commits to `main`).

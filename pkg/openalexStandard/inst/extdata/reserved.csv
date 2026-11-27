@@ -1,0 +1,5 @@
+column,type
+abstract,VARCHAR
+citation,VARCHAR
+relevance_score,DOUBLE
+page,VARCHAR

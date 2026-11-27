@@ -1,0 +1,67 @@
+# Reusable compliance check for a package repository (org or third party).
+#
+# In the package repository, e.g. .github/workflows/compliance.yml:
+#
+#   on: [pull_request]
+#   jobs:
+#     compliance:
+#       uses: openalexPro/openalexPro_Ecosystem/.github/workflows/compliance-check.yml@main
+#       with:
+#         fail-on: must   # must | none
+#
+# Checks the caller's package with openalexStandard::compliance_report() (it builds
+# the package's <prefix>_example_corpus(), STANDARD.md P7), shows the report in the
+# job summary, uploads it, and fails when MUST rules fail (fail-on: must). Writes
+# nothing into the repository.
+name: compliance-check
+
+on:
+  workflow_call:
+    inputs:
+      fail-on:
+        description: "must: fail when a MUST rule fails; none: report only"
+        type: string
+        default: must
+
+permissions:
+  contents: read
+
+jobs:
+  compliance:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"hard"'
+          extra-packages: |
+            github::openalexPro/openalexPro_Ecosystem/pkg/openalexStandard
+            any::pkgload
+            github::openalexPro/openalexAPI
+          cache-version: compliance-check-1
+      - name: Check
+        env:
+          FAIL_ON: ${{ inputs.fail-on }}
+        shell: Rscript {0}
+        run: |
+          ref <- Sys.getenv("GITHUB_HEAD_REF")
+          if (!nzchar(ref)) ref <- Sys.getenv("GITHUB_REF_NAME")
+          r <- openalexStandard::compliance_report(
+            ".", "compliance-report", repo = Sys.getenv("GITHUB_REPOSITORY"),
+            ref = ref, commit = Sys.getenv("GITHUB_SHA"))
+          cat(readLines("compliance-report/report.md"), sep = "\n",
+              file = Sys.getenv("GITHUB_STEP_SUMMARY"), append = TRUE)
+          m <- attr(r, "meta")
+          if (Sys.getenv("FAIL_ON") == "must" && m$must_open > 0) {
+            stop(m$must_open, " MUST rule(s) of STANDARD.md fail; see the job summary.", call. = FALSE)
+          }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compliance-report
+          path: compliance-report/

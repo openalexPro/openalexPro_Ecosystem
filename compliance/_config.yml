@@ -1,0 +1,4 @@
+title: openalexPro ecosystem compliance
+description: Packages checked against STANDARD.md of the openalexPro ecosystem
+exclude:
+  - external.tsv

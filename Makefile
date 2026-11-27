@@ -19,7 +19,7 @@ MANIFEST := repos.tsv
 
 .DEFAULT_GOAL := help
 
-.PHONY: help status audit versions clone fetch pull install test check
+.PHONY: help status audit versions clone fetch pull install test check compliance
 
 help:
 	@echo "openalexPro ecosystem"
@@ -35,6 +35,7 @@ help:
 	@echo "  make install    R CMD INSTALL, in manifest (= dependency) order"
 	@echo "  make test       testthat::test_local, in manifest order"
 	@echo "  make check      devtools::check, in manifest order"
+	@echo "  make compliance compliance reports for the local clones -> scratch/compliance/ (no commit)"
 	@echo ""
 	@echo "  install/test/check skip 'support' rows (dot-github, the Pages site)."
 	@echo "  Repos are independent clones. There is no push target by design."
@@ -148,3 +149,16 @@ check:
 	  echo "== check $$name"; \
 	  Rscript -e "devtools::check('$$name')" || exit 1; \
 	done < $(MANIFEST)
+
+## ---------------------------------------------------------------- compliance
+
+# Local compliance reports (openalexStandard) for every r-package clone, into
+# scratch/compliance/<name>/. The published reports come from the GitHub workflow.
+compliance:
+	@while read -r name url branch kind; do \
+	  [[ "$$name" == \#* || -z "$$name" ]] && continue; \
+	  [[ "$$kind" == "r-package" ]] || continue; \
+	  [[ -f "$$name/DESCRIPTION" ]] || { echo "== $$name: no DESCRIPTION, skipped"; continue; }; \
+	  echo "== compliance $$name"; \
+	  Rscript -e "pkgload::load_all('pkg/openalexStandard', quiet = TRUE); r <- compliance_report('$$name', 'scratch/compliance/$$name', ref = system('git -C $$name branch --show-current', intern = TRUE), commit = system('git -C $$name rev-parse HEAD', intern = TRUE), manifest = 'repos.tsv'); m <- attr(r, 'meta'); cat(m\$$verdict, '-', m\$$must_open, 'MUST,', m\$$should_open, 'SHOULD open\n')" || exit 1; \
+	 done < $(MANIFEST)

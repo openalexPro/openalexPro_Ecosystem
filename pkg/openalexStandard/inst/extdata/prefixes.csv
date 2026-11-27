@@ -1,0 +1,9 @@
+prefix,package,kind
+oapro,openalexPro,writer
+policy,openalexImportPolicy,writer
+zenodo,openalexImportZenodo,writer
+iisd,openalexImportIISD,writer
+zotero,openalexImportZotero,writer
+snowball,openalexSnowball,transformer
+snapshot,openalexSnapshot,transformer
+vectorcomp,openalexVectorComp,annotator
