@@ -1,0 +1,377 @@
+{
+  "meta": {
+    "package": "openalexAPI",
+    "version": "0.1.1",
+    "repo": "openalexPro/openalexAPI",
+    "ref": "main",
+    "commit": "7f900078eb08c207a2e37177206f287602eacd9f",
+    "standard": "0.1",
+    "checker": "0.1.0",
+    "kind": "consumer",
+    "prefix": null,
+    "corpus": "not a writer or transformer: no corpus built",
+    "must_open": 1,
+    "should_open": 1,
+    "verdict": "not compliant"
+  },
+  "results": [
+    {
+      "rule": "L1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "L2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "L3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "L4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "L5a",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Deduplicating readers keep all partition values",
+      "fix": ""
+    },
+    {
+      "rule": "L5b",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "L5c",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Readers accept mixed partition depths and keys",
+      "fix": ""
+    },
+    {
+      "rule": "S1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "S2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "S3",
+      "level": "SHOULD",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "S5",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "S5a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "S6",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "D1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "D2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "D3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "D4",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Readers work without _dataset.json",
+      "fix": ""
+    },
+    {
+      "rule": "D5",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "Q1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "Q2",
+      "level": "SHOULD",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "Q3",
+      "level": "SHOULD",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "Q4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "I1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "I2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "I3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "I4",
+      "level": "SHOULD",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "I5",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "I6",
+      "level": "SHOULD",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "I7",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "P1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`openalexAPI`",
+      "fix": ""
+    },
+    {
+      "rule": "P2",
+      "level": "MUST",
+      "status": "fail",
+      "evidence": "uses openalexPro without a version floor",
+      "fix": "declare `openalexPro (>= x.y.z)` in Imports"
+    },
+    {
+      "rule": "P2a",
+      "level": "SHOULD",
+      "status": "fail",
+      "evidence": "no `Config/openalexPro/standard`",
+      "fix": "add `Config/openalexPro/standard: 0.1`"
+    },
+    {
+      "rule": "P3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to `openalexImport*` packages",
+      "fix": ""
+    },
+    {
+      "rule": "P4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer",
+      "fix": ""
+    },
+    {
+      "rule": "P6",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "MIT; listed",
+      "fix": ""
+    },
+    {
+      "rule": "P6a",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "CITATION.cff; pkgdown (dev/main branches not checked)",
+      "fix": ""
+    },
+    {
+      "rule": "P7",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "P7a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "K1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "K2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "K4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    },
+    {
+      "rule": "A1",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review writes for targets inside the input corpus: `R/corpus.R:39`, `R/corpus.R:49`, `R/corpus.R:287`",
+      "fix": ""
+    },
+    {
+      "rule": "A2",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "no OpenAlex-only id patterns found; run it on a non-OpenAlex corpus",
+      "fix": ""
+    },
+    {
+      "rule": "T1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer",
+      "fix": ""
+    },
+    {
+      "rule": "T2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "T3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer",
+      "fix": ""
+    },
+    {
+      "rule": "N1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "C1",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Non-OpenAlex records converted or reported",
+      "fix": ""
+    },
+    {
+      "rule": "API",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer, transformer",
+      "fix": ""
+    }
+  ],
+  "provenance": null
+}

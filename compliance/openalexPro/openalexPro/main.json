@@ -1,0 +1,377 @@
+{
+  "meta": {
+    "package": "openalexPro",
+    "version": "0.19.0",
+    "repo": "openalexPro/openalexPro",
+    "ref": "main",
+    "commit": "b3e681fbd42e63fe19b1bbdb46f6f5ef21e0284a",
+    "standard": "0.1",
+    "checker": "0.1.0",
+    "kind": "writer",
+    "prefix": "oapro",
+    "corpus": "no example corpus (P7)",
+    "must_open": 2,
+    "should_open": 1,
+    "verdict": "not compliant"
+  },
+  "results": [
+    {
+      "rule": "L1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L4",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L5a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "L5b",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L5c",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "S1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S3",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S5",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S5a",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S6",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "D5",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "Q1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "Q2",
+      "level": "SHOULD",
+      "status": "manual",
+      "evidence": "review: _query.json is enough to repeat the download",
+      "fix": ""
+    },
+    {
+      "rule": "Q3",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "Q4",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I4",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I5",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`oapro`",
+      "fix": ""
+    },
+    {
+      "rule": "I6",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I7",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "P1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`openalexPro`",
+      "fix": ""
+    },
+    {
+      "rule": "P2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "does not use openalexPro",
+      "fix": ""
+    },
+    {
+      "rule": "P2a",
+      "level": "SHOULD",
+      "status": "fail",
+      "evidence": "no `Config/openalexPro/standard`",
+      "fix": "add `Config/openalexPro/standard: 0.1`"
+    },
+    {
+      "rule": "P3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to `openalexImport*` packages",
+      "fix": ""
+    },
+    {
+      "rule": "P4",
+      "level": "MUST",
+      "status": "fail",
+      "evidence": "no test calls `openalexAPI::prepare_corpus()`",
+      "fix": "add one on the example corpus (P7)"
+    },
+    {
+      "rule": "P6",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "MIT; listed",
+      "fix": ""
+    },
+    {
+      "rule": "P6a",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "CITATION.cff; pkgdown (dev/main branches not checked)",
+      "fix": ""
+    },
+    {
+      "rule": "P7",
+      "level": "MUST",
+      "status": "fail",
+      "evidence": "no `oapro_example_corpus()` exported",
+      "fix": "export it: writes a small compliant corpus offline, returns the corpus folder"
+    },
+    {
+      "rule": "P7a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "K1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "K2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "K4",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "A1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "A2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer, transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "T1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer",
+      "fix": ""
+    },
+    {
+      "rule": "T2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer, annotator",
+      "fix": ""
+    },
+    {
+      "rule": "T3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to transformer",
+      "fix": ""
+    },
+    {
+      "rule": "N1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "C1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer",
+      "fix": ""
+    },
+    {
+      "rule": "API",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    }
+  ],
+  "provenance": null
+}

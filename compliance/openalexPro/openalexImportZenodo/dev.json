@@ -44,13 +44,6 @@
       "fix": ""
     },
     {
-      "rule": "L5",
-      "level": "MAY",
-      "status": "n/a",
-      "evidence": "applies to consumer, transformer, annotator",
-      "fix": ""
-    },
-    {
       "rule": "L5a",
       "level": "MUST",
       "status": "n/a",
@@ -88,13 +81,6 @@
     {
       "rule": "S3",
       "level": "SHOULD",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
-      "fix": ""
-    },
-    {
-      "rule": "S4",
-      "level": "MAY",
       "status": "not verified",
       "evidence": "no example corpus (P7)",
       "fix": ""
@@ -149,6 +135,13 @@
       "fix": ""
     },
     {
+      "rule": "D5",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
       "rule": "Q1",
       "level": "MUST",
       "status": "not verified",
@@ -172,13 +165,6 @@
     {
       "rule": "Q4",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
-      "fix": ""
-    },
-    {
-      "rule": "Q5",
-      "level": "MAY",
       "status": "not verified",
       "evidence": "no example corpus (P7)",
       "fix": ""
@@ -241,6 +227,13 @@
     },
     {
       "rule": "P2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "does not use openalexPro",
+      "fix": ""
+    },
+    {
+      "rule": "P2a",
       "level": "SHOULD",
       "status": "fail",
       "evidence": "no `Config/openalexPro/standard`",
@@ -261,14 +254,14 @@
       "fix": "add one on the example corpus (P7)"
     },
     {
-      "rule": "P5",
+      "rule": "P6",
       "level": "MUST",
-      "status": "n/a",
-      "evidence": "applies to consumer",
+      "status": "pass",
+      "evidence": "MIT; listed",
       "fix": ""
     },
     {
-      "rule": "P6",
+      "rule": "P6a",
       "level": "SHOULD",
       "status": "fail",
       "evidence": "no `CITATION.cff`; no pkgdown site (`_pkgdown.yml`)",
@@ -282,6 +275,13 @@
       "fix": "export it: writes a small compliant corpus offline, returns the corpus folder"
     },
     {
+      "rule": "P7a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
       "rule": "K1",
       "level": "MUST",
       "status": "not verified",
@@ -291,13 +291,6 @@
     {
       "rule": "K2",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
-      "fix": ""
-    },
-    {
-      "rule": "K3",
-      "level": "MAY",
       "status": "not verified",
       "evidence": "no example corpus (P7)",
       "fix": ""
@@ -318,13 +311,6 @@
     },
     {
       "rule": "A2",
-      "level": "MUST",
-      "status": "n/a",
-      "evidence": "applies to consumer, transformer, annotator",
-      "fix": ""
-    },
-    {
-      "rule": "A3",
       "level": "MUST",
       "status": "n/a",
       "evidence": "applies to consumer, transformer, annotator",
@@ -374,13 +360,6 @@
     },
     {
       "rule": "C1",
-      "level": "MUST",
-      "status": "n/a",
-      "evidence": "applies to consumer",
-      "fix": ""
-    },
-    {
-      "rule": "C2",
       "level": "MUST",
       "status": "n/a",
       "evidence": "applies to consumer",

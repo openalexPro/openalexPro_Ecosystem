@@ -1,0 +1,377 @@
+{
+  "meta": {
+    "package": "openalexSnowball",
+    "version": "0.15.6.9000",
+    "repo": "openalexPro/openalexSnowball",
+    "ref": "dev",
+    "commit": "d630a0238780eb74097d7f3db7c79417da61ebee",
+    "standard": "0.1",
+    "checker": "0.1.0",
+    "kind": "transformer",
+    "prefix": "snowball",
+    "corpus": "no example corpus (P7)",
+    "must_open": 1,
+    "should_open": 1,
+    "verdict": "not compliant"
+  },
+  "results": [
+    {
+      "rule": "L1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L4",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L5a",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Deduplicating readers keep all partition values",
+      "fix": ""
+    },
+    {
+      "rule": "L5b",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "L5c",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Readers accept mixed partition depths and keys",
+      "fix": ""
+    },
+    {
+      "rule": "S1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S3",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S5",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S5a",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "S6",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "D4",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review: Readers work without _dataset.json",
+      "fix": ""
+    },
+    {
+      "rule": "D5",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "Q1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "Q2",
+      "level": "SHOULD",
+      "status": "manual",
+      "evidence": "review: _query.json is enough to repeat the download",
+      "fix": ""
+    },
+    {
+      "rule": "Q3",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "Q4",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I4",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I5",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`snowball`",
+      "fix": ""
+    },
+    {
+      "rule": "I6",
+      "level": "SHOULD",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "I7",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "",
+      "fix": ""
+    },
+    {
+      "rule": "P1",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "`openalexSnowball`",
+      "fix": ""
+    },
+    {
+      "rule": "P2",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "openalexPro with a version floor",
+      "fix": ""
+    },
+    {
+      "rule": "P2a",
+      "level": "SHOULD",
+      "status": "fail",
+      "evidence": "no `Config/openalexPro/standard`",
+      "fix": "add `Config/openalexPro/standard: 0.1`"
+    },
+    {
+      "rule": "P3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to `openalexImport*` packages",
+      "fix": ""
+    },
+    {
+      "rule": "P4",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to writer",
+      "fix": ""
+    },
+    {
+      "rule": "P6",
+      "level": "MUST",
+      "status": "pass",
+      "evidence": "MIT; listed",
+      "fix": ""
+    },
+    {
+      "rule": "P6a",
+      "level": "SHOULD",
+      "status": "pass",
+      "evidence": "CITATION.cff; pkgdown (dev/main branches not checked)",
+      "fix": ""
+    },
+    {
+      "rule": "P7",
+      "level": "MUST",
+      "status": "fail",
+      "evidence": "no `snowball_example_corpus()` exported",
+      "fix": "export it: writes a small compliant corpus offline, returns the corpus folder"
+    },
+    {
+      "rule": "P7a",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "K1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "K2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "K4",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "A1",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "review writes for targets inside the input corpus: `R/pro_snowball_extract_edges.R:65`, `R/pro_snowball_extract_edges.R:77`, `R/pro_snowball_extract_edges.R:103`, `R/pro_snowball_get_nodes.R:88`, `R/pro_snowball_get_nodes.R:111`, … (16 in all)",
+      "fix": ""
+    },
+    {
+      "rule": "A2",
+      "level": "MUST",
+      "status": "manual",
+      "evidence": "no OpenAlex-only id patterns found; run it on a non-OpenAlex corpus",
+      "fix": ""
+    },
+    {
+      "rule": "T1",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "T2",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    },
+    {
+      "rule": "T3",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "not automated",
+      "fix": ""
+    },
+    {
+      "rule": "N1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N2",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "N3",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to annotator",
+      "fix": ""
+    },
+    {
+      "rule": "C1",
+      "level": "MUST",
+      "status": "n/a",
+      "evidence": "applies to consumer",
+      "fix": ""
+    },
+    {
+      "rule": "API",
+      "level": "MUST",
+      "status": "not verified",
+      "evidence": "no example corpus (P7)",
+      "fix": ""
+    }
+  ],
+  "provenance": null
+}
