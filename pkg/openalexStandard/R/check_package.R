@@ -61,7 +61,7 @@ check_package <- function(path, kind = NULL, manifest = NULL) {
     if (grepl("^openalexImport", pkg)) {
       fn <- grep("_as_corpus$", exports, value = TRUE)
       if (length(fn)) res("P3", "pass", paste0("`", fn[1], "()`")) else res("P3", "fail", "no `<source>_as_corpus()` exported", "export it")
-    },
+    } else res("P3", "n/a", "applies to `openalexImport*` packages"),
     if (is("writer")) {
       hit <- grep("prepare_corpus\\(", tests$text)
       if (length(hit)) res("P4", "pass", paste("test:", tests$where[hit[1]]))

@@ -56,3 +56,8 @@ test_that("compliance_report() builds the example corpus and writes the report",
   compliance_report(p, out, api = FALSE)
   expect_equal(readLines(file.path(out, "report.md")), before)
 })
+
+test_that("P3 is n/a outside openalexImport* packages", {
+  expect_equal(check_package(fake_pkg("openalexPro"))$status[check_package(fake_pkg("openalexPro"))$rule == "P3"], "n/a")
+  expect_equal(check_package(fake_pkg("openalexImportFoo"))$status[check_package(fake_pkg("openalexImportFoo"))$rule == "P3"], "fail")
+})
