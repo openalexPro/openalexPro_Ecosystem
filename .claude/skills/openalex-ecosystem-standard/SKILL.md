@@ -1,6 +1,6 @@
 ---
 name: openalex-ecosystem-standard
-description: Check an openalexPro ecosystem package (R package source) or a corpus folder (Parquet works + _dataset.json/_query.json) against STANDARD.md, the ecosystem's corpus and package standard, and report each rule it breaks. Also use when writing or changing a package that writes or reads corpora (openalexImport*/openalexExport*, openalexPro, openalexAPI), or when the user asks whether something "follows the standard" or "is ecosystem compatible".
+description: Check an openalexPro ecosystem package (R package source) or a corpus folder (Parquet works + _dataset.json/_query.json) against STANDARD.md, the ecosystem's corpus and package standard, and report each rule it breaks. Also use when writing or changing a package that writes, reads, transforms or annotates corpora (openalexImport*/openalexExport*, openalexPro, openalexAPI, openalexSnowball, openalexVectorComp, openalexConvert, openalexSnapshot), or when the user asks whether something "follows the standard" or "is ecosystem compatible".
 ---
 
 # openalexPro ecosystem standard check
@@ -17,6 +17,10 @@ Decide from the target:
 - **A package source** (has `DESCRIPTION`): check §6, then read the code that writes
   (or reads) corpora and check it would produce (or accept) §1–§5. If a sample corpus
   is cheap to make (a test fixture, `inst/extdata`), build one and check it as a corpus.
+- **Its kind (§8)**: writer (imports), consumer, transformer, annotator — often more
+  than one. Writers and transformers: §1–§7. Every package that reads a corpus: A1–A3.
+  Plus T1–T3, N1–N3 or C1–C2 for its kind.
+- **An annotation folder** (`_dataset.json` with `"type": "annotation"`): N1–N3.
 
 ## Corpus checks (DuckDB from R; never modify the corpus)
 
@@ -56,6 +60,24 @@ f <- list.files(corpus, "\\.parquet$", recursive = TRUE, full.names = TRUE)
 - Grep the writer code for: the partition key it writes, files it puts in the corpus
   folder, whether it writes `_dataset.json` / `_query.json` / `_query.html`, and how it
   forms `id`.
+
+## §8 checks (analysis and processing packages)
+
+Mostly code review; run the package on a non-OpenAlex corpus where you can.
+
+- A1: grep for writes (`write_parquet`, `COPY … TO`, `file.copy`, `unlink`, `dir.create`)
+  whose target can be inside the input corpus folder.
+- A2: run the package's main reader on a compliant corpus from another writer (e.g. one
+  built by openalexImportZenodo, `zenodo:` IDs, no `abstract_inverted_index`) in the
+  scratchpad. Errors, or records lost without a message, are failures.
+- A3: grep for ID handling that assumes OpenAlex form: `"^W"`, `openalex.org/W`,
+  `sub(".*/", …)` followed by a `W` check, `startsWith(id, "https://openalex.org")`.
+- T2/N2: `_dataset.json` of the output has `derived_from` (relative path + SHA-256 of
+  the input's `_dataset.json`), and N2's method/settings; nothing run-dependent.
+- T3: relations written as `links/` with the K1 columns, not as a package-own table.
+- N1/N3: annotation output under `<project>/<prefix>_<name>/query=<name>/`, keyed by
+  `id`, other columns prefixed.
+- C1: feed a corpus with non-OpenAlex records; each is converted or reported.
 
 ## Report
 

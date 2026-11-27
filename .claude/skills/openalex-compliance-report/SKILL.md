@@ -16,14 +16,19 @@ extra top-level files and the reports can be compared.
 2. **Locate the package**: a folder in the ecosystem root, another local path, or a
    GitHub repo (clone it into the scratchpad, read-only). Record the commit
    (`git rev-parse --short HEAD`) and branch checked.
-3. **Classify it**: writer (`openalexImport*`, openalexPro), reader
-   (`openalexExport*`, openalexAPI), or both. Rules that do not apply are `n/a` with a
-   reason, not left out.
+3. **Classify it** (STANDARD.md §8; often more than one): writer (`openalexImport*`,
+   openalexPro), consumer (`openalexExport*`, openalexConvert, openalexAPI),
+   transformer (writes a new corpus: openalexSnowball, openalexSnapshot), annotator
+   (writes data keyed by `id`: openalexVectorComp). Rules that do not apply to its
+   kinds are `n/a` with a reason, not left out.
 4. **Run the checks** as described in the `openalex-ecosystem-standard` skill: package
    checks on the source, corpus checks on a corpus it writes. To get a corpus, use a
    test fixture, `inst/extdata`, or a small run of its `<source>_as_corpus()` into
    the scratchpad — never write into the package or a user's project. If none is
-   possible, mark the corpus rules `not verified` and say why.
+   possible, mark the corpus rules `not verified` and say why. For consumers,
+   transformers and annotators also run the §8 checks: give the package a compliant
+   corpus from another writer (e.g. built by openalexImportZenodo) as input, in the
+   scratchpad, and check its output (annotation folder, derived corpus, link table).
 5. **Write the report** (template below), then summarise it to the user in a few
    lines: verdict, number of MUST failures, the first thing to fix.
 
@@ -37,7 +42,7 @@ following the package's own branching rules (`claude/<description>` from `dev`).
 
 - **Standard:** STANDARD.md <version>
 - **Package:** <package> <version> · <repo> @ <branch> <commit>
-- **Role:** writer | reader | both
+- **Kind:** writer, consumer, transformer, annotator (all that apply)
 - **Date:** <YYYY-MM-DD>
 - **Verdict:** compliant | not compliant (<n> MUST, <m> SHOULD open)
 
@@ -50,10 +55,11 @@ following the package's own branching rules (`claude/<description>` from `dev`).
 
 ## Onboarding steps
 
-- [ ] Writer prefix registered in STANDARD.md I5 (proposed: `<prefix>`)
+- [ ] Prefix registered in STANDARD.md I5 (proposed: `<prefix>`) — writers, transformers, annotators
 - [ ] `Config/openalexPro/standard: <version>` in DESCRIPTION
 - [ ] Row in `repos.tsv` (dependency order) and entry in `ecosystem.md`
-- [ ] Test running `openalexAPI::prepare_corpus()` on a small corpus (P4)
+- [ ] Test running `openalexAPI::prepare_corpus()` on a small corpus (P4) — writers, transformers
+- [ ] Test reading a non-OpenAlex corpus (A2) — consumers, transformers, annotators
 - [ ] Landing page / org profile / r-universe — only once out of alpha
 
 ## Notes

@@ -2,7 +2,7 @@
 
 - **Standard:** STANDARD.md 0.1 (draft)
 - **Package:** openalexImportZenodo 0.0.0.9000 · openalexPro/openalexImportZenodo @ dev 60f58cd
-- **Role:** writer
+- **Kind:** writer
 - **Date:** 2026-11-27
 - **Verdict:** not compliant (7 MUST, 2 SHOULD open)
 
@@ -55,6 +55,17 @@ a database from it without errors. The existing `ipbes_zenodo/corpus/` (built
 | K2 | MUST | ✓ / not verified | `parquet_split = "none"` writes a file even with zero rows; numeric and partitioned splits write none | write an empty file with the schema in those modes |
 | K3 | MUST | ✗ | 14 citation links between corpus works also in `referenced_works` | drop them from the link table, or the standard allows it (see Notes) |
 | K4 | MUST | ✗ | `origin`/`target` outside the corpus are DOI URLs (`https://doi.org/…`) | standard gap, see Notes |
+| A1 | MUST | n/a | writer only; reads no corpus (§8) | |
+| A2 | MUST | n/a | writer only; reads no corpus (§8) | |
+| A3 | MUST | n/a | writer only; reads no corpus (§8) | |
+| T1 | MUST | n/a | writer only; reads no corpus (§8) | |
+| T2 | MUST | n/a | writer only; reads no corpus (§8) | |
+| T3 | MUST | n/a | writer only; reads no corpus (§8) | |
+| N1 | MUST | n/a | writer only; reads no corpus (§8) | |
+| N2 | MUST | n/a | writer only; reads no corpus (§8) | |
+| N3 | MUST | n/a | writer only; reads no corpus (§8) | |
+| C1 | MUST | n/a | writer only; reads no corpus (§8) | |
+| C2 | MUST | n/a | writer only; reads no corpus (§8) | |
 
 ## Onboarding steps
 

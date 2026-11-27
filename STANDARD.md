@@ -174,6 +174,58 @@ wrote it.
   snapshot-sized corpus that would be hundreds of millions of rows).
 - **K4** `origin` and `target` follow §5.
 
+## 8. Analysis and processing packages
+
+§1–§7 describe what a writer puts into a corpus. This section covers packages that
+work on corpora ([#5](https://github.com/openalexPro/openalexPro_Ecosystem/issues/5)).
+A package can be more than one kind.
+
+| Kind | Reads | Writes | Examples |
+|---|---|---|---|
+| **Consumer** | a corpus | something outside the ecosystem (CSL JSON, BibTeX, Zotero, an API) | openalexConvert, openalexAPI, `openalexExport*` |
+| **Transformer** | a corpus or the snapshot | a new corpus | openalexSnowball, openalexSnapshot |
+| **Annotator** | a corpus | data about its records, keyed by `id` | openalexVectorComp |
+
+### All kinds
+
+- **A1** Inputs are read-only: a package MUST NOT write into an input corpus. Caches
+  and outputs go into sibling folders of `<corpus>/` (as openalexAPI's `API/`).
+- **A2** A package MUST accept any corpus following §1–§7, not only openalexPro
+  output: IDs of other writers (`zenodo:…`, `policy:cbd:…`), missing optional columns
+  (e.g. no `abstract_inverted_index`), prefixed extra columns (ignored or passed
+  through), and works in several `query=` partitions (L5a).
+- **A3** IDs MUST be matched on the part after the last `/`, case-insensitively (as
+  openalexAPI's `id_key()`), never by assuming `https://openalex.org/W…`.
+
+### Transformers
+
+- **T1** A transformer is a writer: its output corpus MUST follow §1–§7, under its own
+  registered prefix (I5).
+- **T2** Its `_dataset.json` MUST record its inputs in `derived_from`: for each input
+  corpus, the path relative to the output and the SHA-256 of the input's
+  `_dataset.json` (or `null` when the input has none). Deterministic, as D2.
+- **T3** Relations it produces between records (e.g. citation edges) MUST be written
+  as the link table (§7), with the matching `link_type`.
+
+### Annotators
+
+- **N1** Annotations MUST be written to `<project>/<prefix>_<name>/query=<name>/*.parquet`,
+  next to the corpus, one row per record (or per record and item), keyed by `id`,
+  using the corpus's `query=` partitions, so joining is on `id` (and `query`).
+  Internal storage (e.g. a vector database) is free; N1 applies to what the package
+  hands on.
+- **N2** The annotation folder MUST carry a `_dataset.json` with
+  `"type": "annotation"`, `writer`, `derived_from` (T2), and the method and its
+  settings (e.g. model name and version, parameters). Deterministic, as D2.
+- **N3** Annotation columns other than `id` MUST follow S5 (`<prefix>_<name>`).
+
+### Consumers
+
+- **C1** Records that are not OpenAlex works MUST be converted, or reported as skipped
+  (count and IDs); never dropped silently.
+- **C2** Same as P5: a consumer MUST NOT require `_dataset.json` or openalexPro-only
+  columns.
+
 ---
 
 ## Current compliance (2026-11-27)
@@ -187,5 +239,6 @@ wrote it.
 
 ## Changes
 
-- **0.1** (2026-11-27) First draft. Decisions recorded in
+- **0.1** (2026-11-27) First draft; §8 for analysis and processing packages
+  ([#5](https://github.com/openalexPro/openalexPro_Ecosystem/issues/5)). Decisions recorded in
   [#3](https://github.com/openalexPro/openalexPro_Ecosystem/issues/3).
