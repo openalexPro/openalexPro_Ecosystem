@@ -11,7 +11,9 @@
 #
 # Needs: secret COMPLIANCE_READ_TOKEN (fine-grained, read-only contents + metadata on
 # the org's repositories) for private repositories, and Settings -> Pages ->
-# Source: GitHub Actions.
+# Source: GitHub Actions. The token is used only to list and check out repositories,
+# never in a step that runs package code. Private repositories publish only the
+# redacted report, also in the run's artifacts.
 name: compliance
 
 on:
@@ -68,7 +70,10 @@ jobs:
       max-parallel: 4
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env:
-      GITHUB_PAT: ${{ secrets.COMPLIANCE_READ_TOKEN || github.token }}
+      # Package code runs in this job (load_all, <prefix>_example_corpus()): it must never
+      # see COMPLIANCE_READ_TOKEN. The read token is used only by the checkout below, and
+      # not kept in the clone (persist-credentials: false).
+      GITHUB_PAT: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -78,11 +83,14 @@ jobs:
           repository: ${{ matrix.repo }}
           ref: ${{ matrix.commit }}
           token: ${{ secrets.COMPLIANCE_READ_TOKEN || github.token }}
+          persist-credentials: false
           path: target
       - name: Record the target
+        env:
+          MATRIX: ${{ toJSON(matrix) }}
         run: |
           mkdir -p out
-          jq -n --argjson t '${{ toJSON(matrix) }}' '$t' > out/target.json
+          printf '%s' "$MATRIX" | jq . > out/target.json
           if [ -f target/DESCRIPTION ]; then echo "PKG=true" >> "$GITHUB_ENV"; else echo "PKG=false" >> "$GITHUB_ENV"; fi
       - uses: r-lib/actions/setup-r@v2
         if: env.PKG == 'true'
@@ -136,12 +144,17 @@ jobs:
           cp out/report.md out/report_public.md
           jq -n --arg why "$why" '{meta: {verdict: "error", note: $why}}' > out/report.json
           cp out/report.json out/report_public.json
+      # Artifacts of this public repository can be downloaded by anyone signed in: for a
+      # private repository only the redacted report leaves the job.
+      - name: Keep only the redacted report of a private repository
+        if: always() && matrix.private
+        run: rm -f out/report.md out/report.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: report-${{ matrix.id }}
           path: out/
-          retention-days: 90
+          retention-days: 7
 
   publish:
     needs: [plan, check]

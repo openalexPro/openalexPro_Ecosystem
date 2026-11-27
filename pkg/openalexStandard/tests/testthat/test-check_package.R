@@ -61,3 +61,23 @@ test_that("P3 is n/a outside openalexImport* packages", {
   expect_equal(check_package(fake_pkg("openalexPro"))$status[check_package(fake_pkg("openalexPro"))$rule == "P3"], "n/a")
   expect_equal(check_package(fake_pkg("openalexImportFoo"))$status[check_package(fake_pkg("openalexImportFoo"))$rule == "P3"], "fail")
 })
+
+test_that("redacted reports leak no error text, paths or provenance; publish fails closed", {
+  skip_if_not_installed("pkgload")
+  p <- fake_pkg("openalexImportFoo", c("zenodo_example_corpus", "foo_as_corpus"), files = list(
+    "R/ex.R" = c('zenodo_example_corpus <- function(out) stop("boom at /secret/path")',
+                 "foo_as_corpus <- function(out) NULL")))
+  out <- withr::local_tempdir()
+  compliance_report(p, out, redact = TRUE, api = FALSE, repo = "o/r", ref = "dev")
+  pub <- c(readLines(file.path(out, "report_public.md")), readLines(file.path(out, "report_public.json")))
+  expect_false(any(grepl("secret|boom", pub)))
+  expect_true(any(grepl("secret", readLines(file.path(out, "report.md")))))
+  # publish: private target without a public report gets a stub, never the full report
+  art <- withr::local_tempdir(); site <- withr::local_tempdir()
+  dir.create(file.path(art, "x"))
+  file.copy(file.path(out, c("report.md", "report.json")), file.path(art, "x"))
+  jsonlite::write_json(list(repo = "o/r", branch = "dev", commit = "abc", private = TRUE, standard = "s", checker = "c"),
+                       file.path(art, "x", "target.json"), auto_unbox = TRUE)
+  compliance_publish(art, site)
+  expect_false(any(grepl("secret", readLines(file.path(site, "o", "r", "dev.md")))))
+})

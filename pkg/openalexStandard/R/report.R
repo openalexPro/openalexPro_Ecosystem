@@ -95,7 +95,10 @@ complete_results <- function(r, kind, note) {
 
 write_report <- function(r, file, redact = FALSE) {
   m <- attr(r, "meta")
-  if (redact) r$evidence <- r$fix <- ""
+  if (redact) {
+    r$evidence <- r$fix <- ""
+    m$corpus <- public_note(m$corpus)
+  }
   rules <- standard_rules()
   r$summary <- rules$summary[match(r$rule, rules$rule)]
   r$section <- rules$section[match(r$rule, rules$rule)]
@@ -151,7 +154,7 @@ write_report <- function(r, file, redact = FALSE) {
 
   prov <- attr(r, "provenance")
   tail <- c("", "## Provenance", "",
-            if (is.null(prov)) "No corpus checked." else if (nrow(prov) == 1) "Not derived from another corpus." else
+            if (redact) "Not published (private repository)." else if (is.null(prov)) "No corpus checked." else if (nrow(prov) == 1) "Not derived from another corpus." else
               paste0("- ", strrep("  ", prov$level), prov$writer %|NA|% "unknown writer", " ", prov$path,
                      ifelse(is.na(prov$checksum), "", paste0(" (checksum: ", prov$checksum, ")"))))
   writeLines(c(head, fix_part, "", review_part, unver_part, table, tail), paste0(file, ".md"), useBytes = TRUE)
@@ -202,6 +205,15 @@ issue_url <- function(m, f, redact) {
 }
 
 report_site <- function() "https://openalexpro.github.io/openalexPro_Ecosystem"
+
+# The corpus note for a redacted report: only the fixed texts written by
+# compliance_report(); anything else (an error message, which can hold paths or
+# data) is replaced.
+public_note <- function(note) {
+  ok <- grepl("^built with `[a-z0-9]+_example_corpus\\(\\)`$", note) ||
+    note %in% c("no example corpus (P7)", "not a writer or transformer: no corpus built")
+  if (ok) note else "the example corpus could not be built (details not published)"
+}
 
 `%|NA|%` <- function(a, b) ifelse(is.na(a), b, a)
 

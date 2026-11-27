@@ -312,7 +312,7 @@ volume mount point, so it has no relative form.
 |---|---|---|
 | `openalexStandard` | `pkg/openalexStandard/` | R package: `check_corpus()`, `check_annotation()`, `check_package()`, `compliance_report()`, `expect_compliant_corpus()`. Install: `pak::pak("openalexPro/openalexPro_Ecosystem/pkg/openalexStandard")`. Its rule data must match STANDARD.md; its tests compare them. |
 | Daily reports | `.github/workflows/compliance.yml` | 00:00 UTC and on demand. Checks `main` and `dev` of every watched repository, **only** when the branch head, `STANDARD.md` or `pkg/openalexStandard` changed (`compliance/state.json`). Commits `compliance/<owner>/<repo>/<branch>.md|json` to `main` and deploys the site. |
-| Report site | `compliance/` → <https://openalexpro.github.io/openalexPro_Ecosystem/> | Index of all reports. Private repositories show the status per rule only; the full report is a workflow artifact. |
+| Report site | `compliance/` → <https://openalexpro.github.io/openalexPro_Ecosystem/> | Index of all reports. Private repositories show the status per rule only, also in the run's artifacts; their full report is only available locally (`make compliance`). |
 | PR check | `.github/workflows/compliance-check.yml` | Reusable workflow (`workflow_call`) for any package repository, org or third party: report in the job summary, fails on MUST rules. |
 | Local | `make compliance` | Reports for the local clones into `scratch/compliance/`, no commit. |
 

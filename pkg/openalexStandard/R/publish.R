@@ -17,10 +17,18 @@ compliance_publish <- function(artifacts, site = "compliance", state = file.path
   written <- character()
   for (a in list.dirs(artifacts, recursive = FALSE)) {
     t <- jsonlite::read_json(file.path(a, "target.json"))
-    stem <- if (isTRUE(t$private) && file.exists(file.path(a, "report_public.md"))) "report_public" else "report"
     dest <- file.path(site, t$repo, branch_file(t$branch))
     dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
-    for (e in c("md", "json")) {
+    stem <- if (isTRUE(t$private)) "report_public" else "report"
+    if (isTRUE(t$private) && !file.exists(file.path(a, "report_public.md"))) {
+      # fail closed: never publish a private repository's full report
+      writeLines(c(paste0("# Compliance report: ", t$repo), "", "Not available (private repository)."),
+                 paste0(dest, ".md"))
+      jsonlite::write_json(list(meta = list(verdict = "error", note = "not available (private repository)")),
+                           paste0(dest, ".json"), auto_unbox = TRUE, pretty = TRUE)
+      stem <- NULL
+    }
+    for (e in if (!is.null(stem)) c("md", "json")) {
       f <- file.path(a, paste0(stem, ".", e))
       if (file.exists(f)) {
         file.copy(f, paste0(dest, ".", e), overwrite = TRUE)
