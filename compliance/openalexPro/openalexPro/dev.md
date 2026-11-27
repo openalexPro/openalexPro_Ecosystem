@@ -1,14 +1,60 @@
 # Compliance report: openalexPro
 
-- **Standard:** STANDARD.md 0.1 (checker openalexStandard 0.1.0)
-- **Package:** openalexPro 0.19.0.9000 &middot; openalexPro/openalexPro @ dev a6981a0
+- **Verdict:** not compliant (2 MUST, 1 SHOULD to fix)
+- **Package:** openalexPro 0.19.0.9000 &middot; [openalexPro/openalexPro](https://github.com/openalexPro/openalexPro) @ dev a6981a0
 - **Kind:** writer (prefix `oapro`)
 - **Corpus:** no example corpus (P7)
-- **Verdict:** not compliant (2 MUST, 1 SHOULD open)
+- **Standard:** [STANDARD.md](https://github.com/openalexPro/openalexPro_Ecosystem/blob/main/STANDARD.md) 0.1 (checker openalexStandard 0.1.0)
 
-## Results
+## To fix
 
-| Rule | Level | Status | Evidence | Fix |
+<a href="https://github.com/openalexPro/openalexPro/issues/new?title=Compliance%20with%20STANDARD.md%200.1%3A%203%20fixes&body=-%20%5B%20%5D%20%2A%2AP4%2A%2A%20%28MUST%29%3A%20Test%20runs%20openalexAPI%3A%3Aprepare_corpus%28%29%0A%20%20-%20Found%3A%20no%20test%20calls%20%60openalexAPI%3A%3Aprepare_corpus%28%29%60%0A%20%20-%20Fix%3A%20add%20one%20on%20the%20example%20corpus%20%28P7%29%0A%20%20-%20Rule%3A%20https%3A%2F%2Fgithub.com%2FopenalexPro%2FopenalexPro_Ecosystem%2Fblob%2Fmain%2FSTANDARD.md%236-package-requirements%0A-%20%5B%20%5D%20%2A%2AP7%2A%2A%20%28MUST%29%3A%20Exports%20%60%3Cprefix%3E_example_corpus%28out%29%60%0A%20%20-%20Found%3A%20no%20%60oapro_example_corpus%28%29%60%20exported%0A%20%20-%20Fix%3A%20export%20it%3A%20writes%20a%20small%20compliant%20corpus%20offline%2C%20returns%20the%20corpus%20folder%0A%20%20-%20Rule%3A%20https%3A%2F%2Fgithub.com%2FopenalexPro%2FopenalexPro_Ecosystem%2Fblob%2Fmain%2FSTANDARD.md%236-package-requirements%0A-%20%5B%20%5D%20%2A%2AP2%2A%2A%20%28SHOULD%29%3A%20openalexPro%20floor%3B%20standard%20version%20declared%0A%20%20-%20Found%3A%20no%20%60Config%2FopenalexPro%2Fstandard%60%0A%20%20-%20Fix%3A%20add%20%60Config%2FopenalexPro%2Fstandard%3A%200.1%60%0A%20%20-%20Rule%3A%20https%3A%2F%2Fgithub.com%2FopenalexPro%2FopenalexPro_Ecosystem%2Fblob%2Fmain%2FSTANDARD.md%236-package-requirements%0A%0AChecked%3A%20openalexPro%200.19.0.9000%20%40%20dev%20a6981a0%2C%20STANDARD.md%200.1%2C%20openalexStandard%200.1.0%0AReport%3A%20https%3A%2F%2Fopenalexpro.github.io%2FopenalexPro_Ecosystem%2FopenalexPro%2FopenalexPro%2Fdev.html&labels=compliance" style="display:inline-block;padding:4px 12px;border:1px solid #1f883d;border-radius:6px;background:#1f883d;color:#fff;text-decoration:none;font-weight:600">Open one issue for all 3 fixes</a>
+
+### &#x2717; P4 (MUST): Test runs openalexAPI::prepare_corpus()
+
+**Why:** Packages can be installed and tested together and their output checked automatically. ([STANDARD.md §6](https://github.com/openalexPro/openalexPro_Ecosystem/blob/main/STANDARD.md#6-package-requirements))
+
+**Found:** no test calls `openalexAPI::prepare_corpus()`
+
+**Fix:** add one on the example corpus (P7)
+
+<a href="https://github.com/openalexPro/openalexPro/issues/new?title=Compliance%3A%20P4%20%28MUST%29%20Test%20runs%20openalexAPI%3A%3Aprepare_corpus%28%29&body=%2A%2AP4%2A%2A%20%28MUST%29%3A%20Test%20runs%20openalexAPI%3A%3Aprepare_corpus%28%29%0A-%20Found%3A%20no%20test%20calls%20%60openalexAPI%3A%3Aprepare_corpus%28%29%60%0A-%20Fix%3A%20add%20one%20on%20the%20example%20corpus%20%28P7%29%0A-%20Rule%3A%20https%3A%2F%2Fgithub.com%2FopenalexPro%2FopenalexPro_Ecosystem%2Fblob%2Fmain%2FSTANDARD.md%236-package-requirements%0A%0AChecked%3A%20openalexPro%200.19.0.9000%20%40%20dev%20a6981a0%2C%20STANDARD.md%200.1%2C%20openalexStandard%200.1.0%0AReport%3A%20https%3A%2F%2Fopenalexpro.github.io%2FopenalexPro_Ecosystem%2FopenalexPro%2FopenalexPro%2Fdev.html&labels=compliance" style="display:inline-block;padding:4px 12px;border:1px solid #1f883d;border-radius:6px;background:#1f883d;color:#fff;text-decoration:none;font-weight:600">Open issue</a>
+
+### &#x2717; P7 (MUST): Exports `<prefix>_example_corpus(out)`
+
+**Why:** Packages can be installed and tested together and their output checked automatically. ([STANDARD.md §6](https://github.com/openalexPro/openalexPro_Ecosystem/blob/main/STANDARD.md#6-package-requirements))
+
+**Found:** no `oapro_example_corpus()` exported
+
+**Fix:** export it: writes a small compliant corpus offline, returns the corpus folder
+
+<a href="https://github.com/openalexPro/openalexPro/issues/new?title=Compliance%3A%20P7%20%28MUST%29%20Exports%20%60%3Cprefix%3E_example_corpus%28out%29%60&body=%2A%2AP7%2A%2A%20%28MUST%29%3A%20Exports%20%60%3Cprefix%3E_example_corpus%28out%29%60%0A-%20Found%3A%20no%20%60oapro_example_corpus%28%29%60%20exported%0A-%20Fix%3A%20export%20it%3A%20writes%20a%20small%20compliant%20corpus%20offline%2C%20returns%20the%20corpus%20folder%0A-%20Rule%3A%20https%3A%2F%2Fgithub.com%2FopenalexPro%2FopenalexPro_Ecosystem%2Fblob%2Fmain%2FSTANDARD.md%236-package-requirements%0A%0AChecked%3A%20openalexPro%200.19.0.9000%20%40%20dev%20a6981a0%2C%20STANDARD.md%200.1%2C%20openalexStandard%200.1.0%0AReport%3A%20https%3A%2F%2Fopenalexpro.github.io%2FopenalexPro_Ecosystem%2FopenalexPro%2FopenalexPro%2Fdev.html&labels=compliance" style="display:inline-block;padding:4px 12px;border:1px solid #1f883d;border-radius:6px;background:#1f883d;color:#fff;text-decoration:none;font-weight:600">Open issue</a>
+
+### &#x2717; P2 (SHOULD): openalexPro floor; standard version declared
+
+**Why:** Packages can be installed and tested together and their output checked automatically. ([STANDARD.md §6](https://github.com/openalexPro/openalexPro_Ecosystem/blob/main/STANDARD.md#6-package-requirements))
+
+**Found:** no `Config/openalexPro/standard`
+
+**Fix:** add `Config/openalexPro/standard: 0.1`
+
+<a href="https://github.com/openalexPro/openalexPro/issues/new?title=Compliance%3A%20P2%20%28SHOULD%29%20openalexPro%20floor%3B%20standard%20version%20declared&body=%2A%2AP2%2A%2A%20%28SHOULD%29%3A%20openalexPro%20floor%3B%20standard%20version%20declared%0A-%20Found%3A%20no%20%60Config%2FopenalexPro%2Fstandard%60%0A-%20Fix%3A%20add%20%60Config%2FopenalexPro%2Fstandard%3A%200.1%60%0A-%20Rule%3A%20https%3A%2F%2Fgithub.com%2FopenalexPro%2FopenalexPro_Ecosystem%2Fblob%2Fmain%2FSTANDARD.md%236-package-requirements%0A%0AChecked%3A%20openalexPro%200.19.0.9000%20%40%20dev%20a6981a0%2C%20STANDARD.md%200.1%2C%20openalexStandard%200.1.0%0AReport%3A%20https%3A%2F%2Fopenalexpro.github.io%2FopenalexPro_Ecosystem%2FopenalexPro%2FopenalexPro%2Fdev.html&labels=compliance" style="display:inline-block;padding:4px 12px;border:1px solid #1f883d;border-radius:6px;background:#1f883d;color:#fff;text-decoration:none;font-weight:600">Open issue</a>
+
+
+## To review
+
+The code cannot check these; a person has to.
+
+- **Q2** (SHOULD): _query.json is enough to repeat the download
+
+## Not checked
+
+- 29 rule(s), no example corpus (P7): L1, L2, L3, L4, L5b, S1, S2, S3, S4, S5, S5a, S6, D1, D2, D3, Q1, Q3, Q4, Q5, I1, I2, I3, I4, I6, K1, K2, K3, K4, API
+
+<details markdown="1">
+<summary>All 54 rules</summary>
+
+| Rule | Level | Status | Details | Fix |
 |---|---|---|---|---|
 | L1 | MUST | not verified | no example corpus (P7) |  |
 | L2 | MUST | not verified | no example corpus (P7) |  |
@@ -64,6 +110,8 @@
 | C1 | MUST | n/a | applies to consumer |  |
 | C2 | MUST | n/a | applies to consumer |  |
 | API | MUST | not verified | no example corpus (P7) |  |
+
+</details>
 
 ## Provenance
 
