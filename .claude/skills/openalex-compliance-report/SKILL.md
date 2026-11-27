@@ -30,7 +30,13 @@ extra top-level files and the reports can be compared.
    transformers and annotators also run the §8 checks: give the package a compliant
    corpus from another writer (e.g. built by openalexImportZenodo) as input, in the
    scratchpad, and check its output (annotation folder, derived corpus, link table).
-5. **Write the report** (template below), then summarise it to the user in a few
+5. **Trace `derived_from`** (T2, N2): for the corpus or annotation checked, follow
+   `derived_from` back through each input's `_dataset.json` until an input has none
+   (`null` checksum, e.g. the OpenAlex snapshot or an openalexPro download). Recompute
+   each SHA-256 and flag a mismatch (the input changed after the output was built).
+   Put the chain in the report under "Provenance". No `derived_from` (writers): say so
+   in one line.
+6. **Write the report** (template below), then summarise it to the user in a few
    lines: verdict, number of MUST failures, the first thing to fix.
 
 Do not change the package. Fixes go in the report; apply them only if the user asks,
@@ -53,6 +59,10 @@ following the package's own branching rules (`claude/<description>` from `dev`).
 |---|---|---|---|---|
 | L1 | MUST | ✓ / ✗ / n/a / not verified | `R/file.R:42`, or the path checked | what to change |
 | … one row per rule id in STANDARD.md, in document order … |
+
+## Provenance
+
+<output> ← <input> (`_dataset.json` sha256 ✓ / ✗ changed / none) ← … — or "not derived (writer)"
 
 ## Onboarding steps
 

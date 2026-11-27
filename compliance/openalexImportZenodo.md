@@ -70,6 +70,10 @@ a database from it without errors. The existing `ipbes_zenodo/corpus/` (built
 | C1 | MUST | n/a | writer only; reads no corpus (§8) | |
 | C2 | MUST | n/a | writer only; reads no corpus (§8) | |
 
+## Provenance
+
+Not derived (writer): the corpus is built from Zenodo records, no `derived_from`.
+
 ## Onboarding steps
 
 - [x] Writer prefix registered in STANDARD.md I5 (`zenodo`)

@@ -133,17 +133,24 @@ wrote it.
 - **I3** The writer MUST declare its template in `_dataset.json` as `id_format` (D3).
 - **I4** `ids` SHOULD carry known external identifiers (`doi`, `<prefix>`).
   `ids.openalex` is set only once the record has been matched to OpenAlex.
-- **I5** Prefixes are registered here, one per writer package, lowercase `[a-z0-9]+`.
+- **I5** Prefixes are registered here, one per package that writes into the ecosystem
+  (writers, transformers T1, annotators N3), lowercase `[a-z0-9]+`.
   The same prefix names the writer's extra columns (S5). It MUST NOT be a scheme
   name (I7).
 
-  | Prefix | Writer |
-  |---|---|
-  | `oapro` | openalexPro (future extra columns; its IDs stay OpenAlex URLs, I1) |
-  | `policy` | openalexImportPolicy |
-  | `zenodo` | openalexImportZenodo |
-  | `iisd` | openalexImportIISD (planned) |
-  | `zotero` | openalexImportZotero (planned) |
+  | Prefix | Package | Kind |
+  |---|---|---|
+  | `oapro` | openalexPro (future extra columns; its IDs stay OpenAlex URLs, I1) | writer |
+  | `policy` | openalexImportPolicy | writer |
+  | `zenodo` | openalexImportZenodo | writer |
+  | `iisd` | openalexImportIISD (planned) | writer |
+  | `zotero` | openalexImportZotero (planned) | writer |
+  | `snowball` | openalexSnowball | transformer |
+  | `snapshot` | openalexSnapshot | transformer |
+  | `vectorcomp` | openalexVectorComp | annotator |
+
+  Consumers that write nothing back into the ecosystem (openalexConvert, openalexAPI)
+  need no prefix.
 
 - **I6** DOIs, where present, use the OpenAlex form `https://doi.org/<doi>`, lowercase.
 - **I7** Identifier schemes, for `ids` keys (I4) and for link ends outside the corpus
