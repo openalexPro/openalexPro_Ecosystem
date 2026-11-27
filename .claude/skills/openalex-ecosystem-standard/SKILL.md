@@ -16,8 +16,9 @@ The automatable checks are code: the R package **openalexStandard** in
 pkgload::load_all("~/GitHub/openalexPro_Ecosystem/pkg/openalexStandard")  # or library(openalexStandard)
 check_corpus("<project>/<corpus>")          # §1–§5, §7, API; kind = "transformer" adds T1/T2
 check_annotation("<project>/<prefix>_<name>", corpus = "<project>/<corpus>")  # N1–N3, T2
-check_package("<package source>")           # P1–P7, I5/I7, kind detection, A1/A3 hints
-provenance("<corpus or annotation>")        # derived_from chain with checksum status
+check_package("<package source>")           # P1–P7a, I5/I7, kind detection, A1/A2 hints
+provenance("<corpus or annotation>")        # derived_from chain, fingerprints checked (D5)
+content_fingerprint("<corpus>")             # the D5 fingerprint of the data
 ```
 
 Each returns one row per rule: `rule, level, status (pass/fail/n/a/not verified/manual),
@@ -34,19 +35,21 @@ Mostly packages that read corpora (§8):
   non-OpenAlex corpus (e.g. one built by openalexImportZenodo: `zenodo:` ids, no
   `abstract_inverted_index`) in the scratchpad. Errors, or records lost without a
   message, are failures.
-- **A3** (id matching): `check_package()` lists suspicious lines (`"^W"`,
+- **A2, id handling**: `check_package()` lists suspicious lines (`"^W"`,
   `openalex.org/W`, …); decide which assume OpenAlex ids.
 - **T3** (relations as the link table), **C1** (non-OpenAlex records converted or
-  reported), **C2**/**P5**/**D4** (no `_dataset.json` required), **L5/L5a/L5c**
-  (partition keys), **Q2** (`_query.json` enough to repeat the download): read the code.
-- **S2/S5a**: the checker compares names and top-level types only; check nested
-  structure and the meaning of reserved columns when in doubt.
+  reported), **D4** (no `_dataset.json` required), **L5a/L5c** (partition keys), **Q2**
+  (`_query.json` enough to repeat the download): read the code.
+- **S2/S5a**: the checker compares names and top-level types only (JSON text for a
+  nested field is accepted); check nested structure and the meaning of reserved
+  columns when in doubt.
 
 ## Report
 
 One table, most serious first: rule id, MUST/SHOULD, what was found (file:line or
 path), the fix. Then one line: compliant / not compliant with STANDARD.md version X.
-For a full report file use the `openalex-compliance-report` skill. Report only; change
+For a full report file use the `openalex-compliance-report` skill; to fix a package,
+the `openalex-compliance-fix` skill. Report only; change
 code only if the user asks.
 
 If the standard and openalexPro, openalexAPI or openalexStandard disagree, say so: the

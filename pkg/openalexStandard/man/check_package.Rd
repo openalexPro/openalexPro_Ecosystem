@@ -11,8 +11,9 @@ check_package(path, kind = NULL, manifest = NULL)
 
 \item{kind}{Kinds to assume instead of detecting them.}
 
-\item{manifest}{Optional path to the ecosystem's \code{repos.tsv}; when given,
-P6 also checks that the package is listed.}
+\item{manifest}{Optional paths to the ecosystem's \code{repos.tsv} and/or
+\code{compliance/external.tsv}; when given, P6 also checks that the package is
+listed in one of them (by package name).}
 }
 \value{
 A data frame of results, as \code{\link[=check_corpus]{check_corpus()}}, with attributes

@@ -23,7 +23,7 @@ The paths written, invisibly.
 \description{
 Used by the ecosystem's compliance workflow. Each folder in \code{artifacts}
 holds the output of one \code{\link[=compliance_report]{compliance_report()}} run plus \code{target.json}
-(\code{repo}, \code{branch}, \code{commit}, \code{private}, \code{standard}, \code{checker}). The reports
+(\code{repo}, \code{branch}, \code{commit}, \code{private}, \code{standard}, \code{checker}, \code{deps}). The reports
 are copied to \verb{<site>/<owner>/<repo>/<branch>.md|json} (the redacted version
 for private repositories), \code{state} is updated, and \verb{<site>/index.md} is
 rebuilt from all reports.

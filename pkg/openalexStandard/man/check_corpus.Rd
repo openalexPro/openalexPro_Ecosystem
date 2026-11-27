@@ -21,8 +21,8 @@ check_corpus(
 \item{kind}{\code{"writer"} or \code{"transformer"}; transformers are also checked for
 T1 and T2.}
 
-\item{prefix}{The writer's prefix (I5). Defaults to \code{writer.prefix} in
-\verb{_dataset.json}.}
+\item{prefix}{The writer's prefix (I5), or the prefixes of all writers of a
+mixed corpus. Defaults to the prefix(es) in \verb{_dataset.json}.}
 
 \item{api}{Also run \code{openalexAPI::prepare_corpus()} (pseudo-rule \code{API}) when
 openalexAPI is installed.}

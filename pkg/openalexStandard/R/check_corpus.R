@@ -9,8 +9,8 @@
 #' @param links The link table folder (K1). Defaults to `links/` next to `dir`.
 #' @param kind `"writer"` or `"transformer"`; transformers are also checked for
 #'   T1 and T2.
-#' @param prefix The writer's prefix (I5). Defaults to `writer.prefix` in
-#'   `_dataset.json`.
+#' @param prefix The writer's prefix (I5), or the prefixes of all writers of a
+#'   mixed corpus. Defaults to the prefix(es) in `_dataset.json`.
 #' @param api Also run `openalexAPI::prepare_corpus()` (pseudo-rule `API`) when
 #'   openalexAPI is installed.
 #' @return A data frame with one row per rule: `rule`, `level`, `status`
@@ -22,7 +22,7 @@ check_corpus <- function(dir, links = file.path(dirname(dir), "links"),
   dir <- normalizePath(dir, mustWork = TRUE)
   files <- parquet_files(dir)
   ds <- read_json_or_null(file.path(dir, "_dataset.json"))
-  prefix <- prefix %||% ds$writer$prefix %||% unique(unlist(lapply(ds$queries, function(x) x$writer$prefix)))[1]
+  prefix <- prefix %||% ds$writer$prefix %||% unique(unlist(lapply(ds$queries, function(x) x$writer$prefix)))
 
   if (!length(files)) {
     out <- res("L1", "fail", paste0("no Parquet files below `", basename(dir), "/`"),
@@ -36,14 +36,16 @@ check_corpus <- function(dir, links = file.path(dirname(dir), "links"),
   schemas <- lapply(files, function(f) q(con, paste0("DESCRIBE SELECT * FROM read_parquet(", lit(f), ", hive_partitioning = false)"))[, 1:2])
   names(schemas) <- substring(files, nchar(dir) + 2)
 
+  # a transformer passes on columns and ids of other writers with their prefix (S5, T1)
+  taken <- if (kind == "transformer") NULL else prefix
   out <- bind(
     list(res("L1", "pass", paste(length(files), "Parquet file(s)"))),
     check_layout(dir, files, schemas),
-    check_schema(con, dir, files, schemas, prefix),
+    check_schema(con, dir, files, schemas, taken),
     check_dataset_json(ds, dir),
     check_query_files(dir),
-    check_ids(con, files, schemas, ds, prefix),
-    check_links(con, dir, links, files, schemas, prefix),
+    check_ids(con, files, schemas, ds, prefix, own_ids = kind != "transformer"),
+    check_links(con, dir, links, files, schemas, taken),
     check_derived_from(ds, dir, kind)
   )
   if (kind == "transformer") {
@@ -61,7 +63,7 @@ corpus_rule_ids <- function(kind) {
   ids <- r$rule[r$section %in% c("1", "2", "3", "4", "5", "7", "check") &
                   grepl("writer", r$kinds) & r$rule != "P7"]
   ids <- setdiff(ids, c("I5", "I7", "Q2"))
-  c(ids, "I5", "I7", "Q2", if (kind == "transformer") c("T1", "T2"))
+  c(ids, "I5", "I7", "Q2", "D5", if (kind == "transformer") c("T1", "T2"))
 }
 
 check_layout <- function(dir, files, schemas) {
@@ -109,7 +111,7 @@ check_schema <- function(con, dir, files, schemas, prefix) {
     t <- unique(all$column_type[all$column_name == base$field[i]])
     # a VARCHAR on either side is a JSON-serialised form (e.g. the snapshot's
     # abstract_inverted_index), which readers accept
-    if (base$type[i] == "VARCHAR") return(NULL)
+    if (base$type[i] == "VARCHAR") return(if (any(type_class(t) != "SCALAR")) base$field[i])
     t <- t[t != "VARCHAR"]
     if (length(t) && !all(type_class(t) == type_class(base$type[i]))) base$field[i]
   }))
@@ -137,7 +139,7 @@ check_schema <- function(con, dir, files, schemas, prefix) {
   }))
   okf <- files[!names(schemas) %in% no_works]
   dup <- if (length(okf)) q(con, paste0(
-    "SELECT regexp_extract(filename, '/query=([^/]+)/', 1) AS p, count(*) - count(DISTINCT id) AS d ",
+    "SELECT regexp_extract(filename, '/query=([^/]+)/', 1) AS p, count(id) - count(DISTINCT id) AS d ",
     "FROM read_parquet(", lit_list(okf), ", filename = true, union_by_name = true, hive_partitioning = false) ",
     "GROUP BY 1 HAVING d > 0")) else data.frame(p = character(), d = numeric())
   list(
@@ -165,11 +167,12 @@ check_dataset_json <- function(ds, dir) {
   if (is.null(ds)) {
     return(list(res("D1", "fail", "no `_dataset.json`", "write it (STANDARD.md D3)"),
                 res("D2", "not verified", "no `_dataset.json`"),
-                res("D3", "not verified", "no `_dataset.json`")))
+                res("D3", "not verified", "no `_dataset.json`"),
+                res("D5", "not verified", "no `_dataset.json`")))
   }
   if (!is.null(attr(ds, "parse_error"))) {
     return(list(res("D1", "fail", paste("`_dataset.json` does not parse:", attr(ds, "parse_error")), "write valid JSON"),
-                res("D2", "not verified"), res("D3", "not verified")))
+                res("D2", "not verified"), res("D3", "not verified"), res("D5", "not verified")))
   }
   vals <- as.character(unlist(ds))
   run_dep <- vals[grepl("\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}", vals) | grepl("^(/|~|[A-Za-z]:[\\\\/])", vals)]
@@ -180,10 +183,19 @@ check_dataset_json <- function(ds, dir) {
   }
   miss <- c(if (is.null(ds$standard)) "standard", if (is.null(ds$type)) "type",
             if (is.null(ds$partition_keys)) "partition_keys",
+            if (is.null(ds$content)) "content",
+            if (!is.null(ds$type) && !ds$type %in% c("works", "annotation")) "type (works or annotation)",
+            if (!is.null(ds$queries) && (!is.null(ds$writer) || !is.null(ds$id_format))) "queries replaces writer/id_format",
             if (is.null(ds$queries)) need(ds) else unlist(lapply(names(ds$queries), function(n) {
               m <- need(ds$queries[[n]]); if (length(m)) paste0("queries.", n, ".", m)
             })))
+  fp <- content_fingerprint(dir)
+  d5 <- if (is.null(ds$content)) res("D5", "fail", "no `content` fingerprint", "write it with `openalexStandard::write_dataset_json()`")
+  else if (!identical(ds$content, fp)) res("D5", "fail", paste0("`content` ", ds$content, " but the data give ", fp),
+                                           "rewrite `_dataset.json` after writing the data")
+  else res("D5", "pass", fp)
   list(
+    d5,
     res("D1", "pass"),
     if (length(run_dep)) res("D2", "fail", paste("run-dependent values:", show(run_dep)),
                              "remove timestamps and absolute paths")
@@ -214,20 +226,23 @@ check_query_files <- function(dir) {
   )
 }
 
-check_ids <- function(con, files, schemas, ds, prefix) {
+check_ids <- function(con, files, schemas, ds, prefix, own_ids = TRUE) {
   okf <- files[vapply(schemas, function(d) "id" %in% d$column_name, TRUE)]
   cols <- unique(unlist(lapply(schemas, `[[`, "column_name")))
   src <- paste0("read_parquet(", lit_list(okf), ", union_by_name = true, hive_partitioning = false, filename = true)")
   oa <- q(con, paste0("SELECT count(*) FILTER (WHERE id LIKE 'https://openalex.org/%') AS n_oa, ",
                       "count(*) FILTER (WHERE id LIKE 'https://openalex.org/%' AND NOT regexp_full_match(id, 'https://openalex\\.org/W[0-9]+')) AS bad_oa, ",
+                      "count(*) FILTER (WHERE id IS NULL) AS n_null, count(DISTINCT id) - count(DISTINCT lower(id)) AS n_case, ",
                       "count(*) AS n FROM ", src))
   other <- q(con, paste0("SELECT id FROM ", src, " WHERE id NOT LIKE 'https://openalex.org/%' AND ",
-                         "NOT regexp_full_match(id, '[a-z0-9]+:[^/]+') LIMIT 6"))$id
+                         "NOT regexp_full_match(id, '[a-z0-9]+:[^/]+') ORDER BY id LIMIT 6"))$id
   pre <- q(con, paste0("SELECT DISTINCT split_part(id, ':', 1) AS p FROM ", src,
                        " WHERE id NOT LIKE 'https://openalex.org/%' AND regexp_full_match(id, '[a-z0-9]+:[^/]+')"))$p
   reg <- standard_prefixes()$prefix
-  i2_bad <- c(if (length(other)) paste("not `<prefix>:<part>`:", show(other)),
-              if (!is.null(prefix) && length(setdiff(pre, prefix))) paste("first part is not the writer prefix:", show(setdiff(pre, prefix))),
+  i2_bad <- c(if (oa$n_null > 0) paste(oa$n_null, "record(s) without `id`"),
+              if (oa$n_case > 0) paste(oa$n_case, "id(s) differing from another only in letter case"),
+              if (length(other)) paste("not `<prefix>:<part>`:", show(other)),
+              if (own_ids && !is.null(prefix) && length(setdiff(pre, prefix))) paste("first part is not the writer prefix:", show(setdiff(pre, prefix))),
               if (length(setdiff(pre, reg))) paste("unregistered prefix:", show(setdiff(pre, reg))))
   # I3: id_format
   fmts <- if (!is.null(ds$queries)) unique(unlist(lapply(ds$queries, `[[`, "id_format"))) else ds$id_format
@@ -235,13 +250,13 @@ check_ids <- function(con, files, schemas, ds, prefix) {
   else if (is.null(fmts)) res("I3", "fail", "no `id_format` in `_dataset.json`", "declare `id_format` (D3)")
   else {
     rx <- paste(vapply(fmts, id_format_regex, ""), collapse = "|")
-    nm <- q(con, paste0("SELECT id FROM ", src, " WHERE NOT regexp_matches(id, ", lit(rx), ") LIMIT 6"))$id
+    nm <- q(con, paste0("SELECT id FROM ", src, " WHERE NOT regexp_matches(id, ", lit(rx), ") ORDER BY id LIMIT 6"))$id
     if (length(nm)) res("I3", "fail", paste0("ids not matching `", paste(fmts, collapse = "` / `"), "`: ", show(nm)),
                         "fix the ids or `id_format`")
     else res("I3", "pass", paste0("`", paste(fmts, collapse = "`, `"), "`"))
   }
   doi <- if ("doi" %in% cols) q(con, paste0("SELECT doi FROM ", src, " WHERE doi IS NOT NULL AND ",
-                                            "(NOT starts_with(doi, 'https://doi.org/') OR doi <> lower(doi)) LIMIT 6"))$doi
+                                            "(NOT starts_with(doi, 'https://doi.org/') OR doi <> lower(doi)) ORDER BY doi LIMIT 6"))$doi
   list(
     if (oa$n_oa == 0) res("I1", "n/a", "no OpenAlex ids")
     else if (oa$bad_oa > 0) res("I1", "fail", paste(oa$bad_oa, "OpenAlex ids not `https://openalex.org/W<n>`"), "use the full OpenAlex URL")
@@ -252,13 +267,13 @@ check_ids <- function(con, files, schemas, ds, prefix) {
     i3,
     if ("ids" %in% cols) res("I4", "pass") else res("I4", "fail", "no `ids` column", "add `ids` with known external identifiers"),
     if (is.null(prefix)) res("I5", "not verified", "writer prefix unknown (no `writer.prefix` in `_dataset.json`)")
-    else if (!prefix %in% reg) res("I5", "fail", paste0("`", prefix, "` is not registered"), "register it in STANDARD.md I5")
-    else res("I5", "pass", paste0("`", prefix, "`")),
+    else if (!all(prefix %in% reg)) res("I5", "fail", paste(show(setdiff(prefix, reg)), "not registered"), "register it in STANDARD.md I5")
+    else res("I5", "pass", show(prefix)),
     if (!"doi" %in% cols) res("I6", "n/a", "no `doi` column")
     else if (length(doi)) res("I6", "fail", paste("DOIs not lowercase `https://doi.org/...`:", show(doi)), "normalise the DOIs")
     else res("I6", "pass"),
     if (is.null(prefix)) res("I7", "not verified", "writer prefix unknown")
-    else if (prefix %in% standard_schemes()) res("I7", "fail", paste0("`", prefix, "` is a scheme name"), "choose another prefix")
+    else if (any(prefix %in% standard_schemes())) res("I7", "fail", paste(show(intersect(prefix, standard_schemes())), "is a scheme name"), "choose another prefix")
     else res("I7", "pass")
   )
 }
@@ -283,27 +298,31 @@ check_links <- function(con, dir, links, files, schemas, prefix) {
                 res("K4", "not verified", "no link files")))
   }
   ls <- unique(do.call(rbind, lapply(lf, function(f) q(con, paste0("DESCRIBE SELECT * FROM read_parquet(", lit(f), ", hive_partitioning = false)"))[, 1:2])))
-  req <- c(origin = "VARCHAR", target = "VARCHAR", link_type = "VARCHAR",
+  req <- c(origin = "VARCHAR", target = "VARCHAR", link_type = "VARCHAR", relation = "VARCHAR",
            origin_in_corpus = "BOOLEAN", target_in_corpus = "BOOLEAN")
   miss <- names(req)[!names(req) %in% ls$column_name]
   wrong <- names(req)[names(req) %in% ls$column_name &
                         !vapply(names(req), function(n) all(ls$column_type[ls$column_name == n] == req[[n]]), TRUE)]
   extra <- setdiff(ls$column_name, names(req))
   bad_extra <- extra[!has_prefix(extra, prefix)]
+  bad_lt <- if ("link_type" %in% ls$column_name) q(con, paste0(
+    "SELECT DISTINCT link_type FROM read_parquet(", lit_list(lf), ", union_by_name = true, hive_partitioning = false) ",
+    "WHERE link_type IS NOT NULL AND link_type NOT IN (", paste(lit(link_types()), collapse = ", "), ") ORDER BY 1"))$link_type
   k1 <- c(if (length(miss)) paste("missing columns:", show(miss)),
           if (length(wrong)) paste("wrong types:", show(wrong)),
+          if (length(bad_lt)) paste("`link_type` not an OpenAlex link type or NA:", show(bad_lt)),
           if (length(bad_extra)) paste("extra columns without the writer prefix:", show(bad_extra)))
   k4 <- if (length(miss)) res("K4", "not verified", "required columns missing (K1)") else {
-    schemes <- paste(standard_schemes(), collapse = "|")
+    schemes <- paste(link_schemes(), collapse = "|")
     src <- paste0("read_parquet(", lit_list(lf), ", union_by_name = true, hive_partitioning = false)")
     okf <- files[vapply(schemas, function(d) "id" %in% d$column_name, TRUE)]
-    ids <- paste0("(SELECT DISTINCT id FROM read_parquet(", lit_list(okf), ", union_by_name = true, hive_partitioning = false))")
+    ids <- paste0("(SELECT DISTINCT id FROM read_parquet(", lit_list(okf), ", union_by_name = true, hive_partitioning = false) WHERE id IS NOT NULL)")
     outside_rx <- paste0("^(https://doi\\.org/.+|https?://.+|(", schemes, "):.+)$")
     ends <- paste0("SELECT origin AS v, origin_in_corpus AS inc FROM ", src,
                    " UNION ALL SELECT target, target_in_corpus FROM ", src)
-    bad_out <- q(con, paste0("SELECT v, count(*) AS n FROM (", ends, ") WHERE NOT inc AND NOT regexp_matches(v, ",
-                             lit(outside_rx), ") GROUP BY v ORDER BY n DESC"))
-    bad_in <- q(con, paste0("SELECT DISTINCT v FROM (", ends, ") e WHERE inc AND v NOT IN ", ids, " LIMIT 6"))$v
+    bad_out <- q(con, paste0("SELECT v, count(*) AS n FROM (", ends, ") WHERE NOT inc AND (v IS NULL OR NOT regexp_matches(v, ",
+                             lit(outside_rx), ")) GROUP BY v ORDER BY n DESC, v"))
+    bad_in <- q(con, paste0("SELECT DISTINCT v FROM (", ends, ") e WHERE inc AND (v IS NULL OR v NOT IN ", ids, ") ORDER BY v LIMIT 6"))$v
     n_out <- q(con, paste0("SELECT count(*) AS n FROM (", ends, ") WHERE NOT inc"))$n
     form <- function(v) ifelse(grepl("^https://doi\\.org/", v), "doi", ifelse(grepl("^https?://", v), "url", sub(":.*$", "", v)))
     if (nrow(bad_out) || length(bad_in)) {
@@ -323,22 +342,26 @@ check_links <- function(con, dir, links, files, schemas, prefix) {
 }
 
 check_derived_from <- function(ds, dir, kind) {
+  if (kind == "writer") return(NULL) # T2 applies to transformers and annotators only
   df <- ds$derived_from
-  if (is.null(df)) {
-    if (kind == "transformer") return(list(res("T2", "fail", "no `derived_from` in `_dataset.json`", "record the input corpora (T2)")))
-    return(NULL)
-  }
-  bad <- unlist(lapply(df, function(e) {
-    f <- file.path(dir, e$path, "_dataset.json")
-    if (!is.null(attr(ds, "parse_error"))) return(NULL)
-    if (is.null(e$path)) return("entry without `path`")
-    if (grepl("^(/|~|[A-Za-z]:)", e$path)) return(paste0("absolute path `", e$path, "`"))
-    if (is.null(e$sha256)) { if (file.exists(f)) return(paste0("`", e$path, "` has a `_dataset.json` but no checksum is recorded")); return(NULL) }
-    if (!file.exists(f)) return(paste0("input `", e$path, "` not found"))
-    if (!identical(sha256_file(f), e$sha256)) paste0("input `", e$path, "` changed since (checksum differs)")
-  }))
+  if (is.null(df)) return(list(res("T2", "fail", "no `derived_from` in `_dataset.json`", "record the input corpora (T2)")))
+  st <- vapply(df, derived_status, "", dir = dir)
+  bad <- st[!st %in% c("ok", "external")]
   list(if (length(bad)) res("T2", "fail", bad, "rebuild from the current inputs, or fix `derived_from`")
-       else res("T2", "pass", paste(length(df), "input(s), checksums match")))
+       else res("T2", "pass", paste(length(df), "input(s), fingerprints match")))
+}
+
+# Status of one `derived_from` entry: "ok", "external" (e.g. the OpenAlex snapshot,
+# recorded by source and release), or why it does not check out.
+derived_status <- function(e, dir) {
+  if (!is.null(e$source)) return(if (!is.null(e$release)) "external" else paste0("`", e$source, "` without `release`"))
+  if (is.null(e$path)) return("entry without `path` or `source`")
+  if (grepl("^(/|~|[A-Za-z]:)", e$path)) return(paste0("absolute path `", e$path, "`"))
+  p <- file.path(dir, e$path)
+  if (!dir.exists(p)) return(paste0("input `", e$path, "` not found"))
+  if (is.null(e$content)) return(paste0("no `content` recorded for `", e$path, "`"))
+  if (!identical(content_fingerprint(p), e$content)) return(paste0("input `", e$path, "` changed since (fingerprint differs)"))
+  "ok"
 }
 
 check_api <- function(dir, api) {

@@ -27,3 +27,13 @@ test_that("section headings exist in STANDARD.md", {
   s <- openalexStandard:::sections()
   expect_true(all(stats::na.omit(s$heading) %in% h))
 })
+
+test_that("rule levels match STANDARD.md (first MUST/SHOULD/MAY in each rule)", {
+  s <- paste(std(), collapse = "\n")
+  m <- gregexpr("(?ms)^\\s*- \\*\\*([A-Z][0-9]+[a-z]?)\\*\\*(.*?)(?=^\\s*- \\*\\*[A-Z]|\\n\\n)", s, perl = TRUE)
+  blocks <- regmatches(s, m)[[1]]
+  id <- sub("(?s)^\\s*- \\*\\*([A-Z][0-9]+[a-z]?)\\*\\*.*$", "\\1", blocks, perl = TRUE)
+  lvl <- regmatches(blocks, regexpr("\\b(MUST|SHOULD|MAY)\\b", blocks))
+  r <- standard_rules()
+  expect_equal(r$level[match(id, r$rule)], lvl, label = paste(id, collapse = " "))
+})

@@ -1,28 +1,26 @@
 rule,level,section,kinds,automated,summary
-L1,MUST,1,writer;transformer,yes,Data are Parquet files below the corpus folder
+L1,MUST,1,writer;transformer,yes,Data are Parquet files below the partitions
 L2,MUST,1,writer;transformer,yes,Top partition key is query=
 L3,MUST,1,writer;transformer,yes,Partition names are valid folder names
 L4,MUST,1,writer;transformer,yes,Non-data files in the corpus start with _
-L5,MAY,1,consumer;transformer;annotator,manual,Readers may expose partition keys
 L5a,MUST,1,consumer;transformer;annotator,manual,Deduplicating readers keep all partition values
 L5b,MUST,1,writer;transformer,yes,No data column named like a partition key
 L5c,MUST,1,consumer;transformer;annotator,manual,Readers accept mixed partition depths and keys
 S1,MUST,2,writer;transformer,yes,Works files have id and title or display_name
 S2,MUST,2,writer;transformer,partly,OpenAlex columns keep their names and structure
 S3,SHOULD,2,writer;transformer,yes,Listed columns have the listed types
-S4,MAY,2,writer;transformer,yes,Plain-text abstract column
-S5,MUST,2,writer;transformer,yes,Extra columns are prefixed
-S5a,MUST,2,writer;transformer,partly,Reserved column names keep their meaning
+S5,MUST,2,writer;transformer,yes,Extra columns carry a registered prefix
+S5a,MUST,2,writer;transformer,partly,Reserved column names keep their meaning and type
 S6,MUST,2,writer;transformer,yes,id is unique within a partition
 D1,MUST,3,writer;transformer,yes,_dataset.json exists
 D2,MUST,3,writer;transformer,yes,_dataset.json is deterministic
 D3,MUST,3,writer;transformer,yes,_dataset.json has the required fields
 D4,MUST,3,consumer;transformer;annotator,manual,Readers work without _dataset.json
+D5,MUST,3,writer;transformer,yes,content fingerprint matches the data
 Q1,MUST,4,writer;transformer,yes,Each partition has _query.json
 Q2,SHOULD,4,writer;transformer,manual,_query.json is enough to repeat the download
 Q3,SHOULD,4,writer;transformer,yes,Each partition has _query.html
 Q4,MUST,4,writer;transformer,partly,_query files survive conversion
-Q5,MAY,4,writer;transformer,yes,_query files may hold run-dependent values
 I1,MUST,5,writer;transformer,yes,OpenAlex ids are OpenAlex URLs
 I2,MUST,5,writer;transformer,yes,Other ids are `<prefix>:<part>...`
 I3,MUST,5,writer;transformer,yes,id_format declared and matching
@@ -31,25 +29,24 @@ I5,MUST,5,writer;transformer;annotator,yes,Prefix registered
 I6,SHOULD,5,writer;transformer,yes,DOIs as lowercase https://doi.org/
 I7,MUST,5,writer;transformer;annotator,yes,Prefix is not a scheme name
 P1,MUST,6,writer;consumer;transformer;annotator,yes,Package name
-P2,MUST,6,writer;consumer;transformer;annotator,yes,openalexPro floor; standard version declared
+P2,MUST,6,writer;consumer;transformer;annotator,yes,openalexPro version floor
+P2a,SHOULD,6,writer;consumer;transformer;annotator,yes,Standard version declared
 P3,MUST,6,writer,yes,Import packages export `<source>_as_corpus()`
 P4,MUST,6,writer,partly,Test runs openalexAPI::prepare_corpus()
-P5,MUST,6,consumer,manual,Consumers accept any compliant corpus
-P6,MUST,6,writer;consumer;transformer;annotator,yes,MIT licence; repos.tsv; dev/main; CITATION.cff; pkgdown
+P6,MUST,6,writer;consumer;transformer;annotator,yes,MIT licence; listed in repos.tsv or external.tsv
+P6a,SHOULD,6,writer;consumer;transformer;annotator,partly,CITATION.cff; pkgdown site; dev/main branches
 P7,MUST,6,writer;transformer,yes,Exports `<prefix>_example_corpus(out)`
-K1,MUST,7,writer;transformer,yes,Link table with the required columns
+P7a,MUST,6,annotator,yes,"Exports `<prefix>_example_annotation(out, corpus)`"
+K1,MUST,7,writer;transformer,yes,Link table with the required columns and link types
 K2,MUST,7,writer;transformer,yes,Link table exists even with zero rows
-K3,MAY,7,writer;transformer,yes,Links may repeat works-column relations
 K4,MUST,7,writer;transformer,yes,Link ends use one identifier form
 A1,MUST,8,consumer;transformer;annotator,partly,Inputs are read-only
-A2,MUST,8,consumer;transformer;annotator,manual,Accept any compliant corpus
-A3,MUST,8,consumer;transformer;annotator,partly,IDs matched on the part after the last /
-T1,MUST,8,transformer,yes,Transformer output follows §1–§7
+A2,MUST,8,consumer;transformer;annotator,partly,Accept any compliant corpus
+T1,MUST,8,transformer,yes,Transformer output follows sections 1-7
 T2,MUST,8,transformer;annotator,yes,derived_from recorded and current
 T3,MUST,8,transformer,partly,Relations written as the link table
 N1,MUST,8,annotator,yes,Annotation layout
 N2,MUST,8,annotator,yes,Annotation _dataset.json
 N3,MUST,8,annotator,yes,Annotation columns prefixed
 C1,MUST,8,consumer,manual,Non-OpenAlex records converted or reported
-C2,MUST,8,consumer,manual,Consumers do not require _dataset.json
 API,MUST,check,writer;transformer,yes,openalexAPI::prepare_corpus() builds the corpus

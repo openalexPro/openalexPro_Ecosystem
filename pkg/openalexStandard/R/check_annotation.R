@@ -28,7 +28,7 @@ check_annotation <- function(dir, corpus = NULL) {
     cf <- parquet_files(corpus)
     miss <- q(con, paste0(
       "SELECT DISTINCT id FROM read_parquet(", lit_list(files), ", union_by_name = true, hive_partitioning = false) ",
-      "WHERE id NOT IN (SELECT id FROM read_parquet(", lit_list(cf), ", union_by_name = true, hive_partitioning = false)) LIMIT 6"))$id
+      "WHERE id IS NULL OR id NOT IN (SELECT id FROM read_parquet(", lit_list(cf), ", union_by_name = true, hive_partitioning = false) WHERE id IS NOT NULL) ORDER BY id LIMIT 6"))$id
     if (length(miss)) n1 <- c(n1, paste("ids not in the corpus:", show(miss)))
   }
 
@@ -36,7 +36,9 @@ check_annotation <- function(dir, corpus = NULL) {
     if (!identical(ds$type, "annotation")) "`type` is not \"annotation\"",
     if (is.null(ds$writer$package) || is.null(ds$writer$prefix)) "no `writer` (package, version, prefix)",
     if (is.null(ds$derived_from)) "no `derived_from`",
-    if (is.null(ds$method)) "no `method` (name, version, settings)")
+    if (is.null(ds$method)) "no `method` (name, version, settings)",
+    if (is.null(ds$content)) "no `content` fingerprint (D5)"
+    else if (!identical(ds$content, content_fingerprint(dir))) "`content` does not match the data (D5)")
   bad_cols <- setdiff(cols, c("id", "query"))
   bad_cols <- bad_cols[!has_prefix(bad_cols, prefix)]
 
@@ -54,10 +56,10 @@ check_annotation <- function(dir, corpus = NULL) {
 #' Where a corpus or annotation comes from
 #'
 #' Follows `derived_from` in `_dataset.json` back to the sources, and checks each
-#' recorded SHA-256 against the input's current `_dataset.json`.
+#' recorded `content` fingerprint against the input's current data (D5).
 #' @param dir A corpus or annotation folder.
 #' @return A data frame: `level` (0 = `dir`), `path`, `writer`, `checksum`
-#'   (`ok`, `changed`, `none`, `missing`).
+#'   (`ok`, `changed`, `none`, `missing`, `external`).
 #' @export
 provenance <- function(dir) {
   out <- list()
@@ -68,11 +70,14 @@ provenance <- function(dir) {
       checksum = status, stringsAsFactors = FALSE)
     if (lvl > 20) return(invisible())
     for (e in ds$derived_from) {
-      p <- file.path(d, e$path)
-      f <- file.path(p, "_dataset.json")
-      st <- if (!dir.exists(p)) "missing" else if (is.null(e$sha256)) "none" else
-        if (file.exists(f) && identical(sha256_file(f), e$sha256)) "ok" else "changed"
-      walk(normalizePath(p, mustWork = FALSE), lvl + 1L, st)
+      st <- derived_status(e, d)
+      if (!is.null(e$source)) {
+        out[[length(out) + 1L]] <<- data.frame(level = lvl + 1L, path = paste(e$source, e$release %||% ""),
+                                              writer = NA_character_, checksum = "external", stringsAsFactors = FALSE)
+      } else {
+        st <- if (st == "ok") "ok" else if (grepl("not found", st)) "missing" else if (grepl("no `content`", st)) "none" else "changed"
+        walk(normalizePath(file.path(d, e$path), mustWork = FALSE), lvl + 1L, st)
+      }
     }
   }
   walk(normalizePath(dir, mustWork = TRUE), 0L, NA_character_)

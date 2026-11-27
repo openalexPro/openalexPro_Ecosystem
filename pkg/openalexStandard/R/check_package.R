@@ -7,8 +7,9 @@
 #'
 #' @param path Package source folder.
 #' @param kind Kinds to assume instead of detecting them.
-#' @param manifest Optional path to the ecosystem's `repos.tsv`; when given,
-#'   P6 also checks that the package is listed.
+#' @param manifest Optional paths to the ecosystem's `repos.tsv` and/or
+#'   `compliance/external.tsv`; when given, P6 also checks that the package is
+#'   listed in one of them (by package name).
 #' @return A data frame of results, as [check_corpus()], with attributes
 #'   `package`, `version`, `kind` and `prefix`.
 #' @export
@@ -29,24 +30,23 @@ check_package <- function(path, kind = NULL, manifest = NULL) {
 
   deps <- paste(d$Imports %||% "", d$Depends %||% "")
   uses_pro <- grepl("\\bopenalexPro\\b", deps) || any(grepl("openalexPro::", code$text, fixed = TRUE))
-  p2 <- if (uses_pro && !grepl("openalexPro\\s*\\(\\s*>=", deps)) {
-    res("P2", "fail", "uses openalexPro without a version floor", "declare `openalexPro (>= x.y.z)` in Imports")
-  } else if (is.null(d[["Config/openalexPro/standard"]])) {
-    res("P2", "fail", "no `Config/openalexPro/standard`", paste0("add `Config/openalexPro/standard: ", standard_version(), "`"),
-        level = "SHOULD")
-  } else res("P2", "pass", paste0("standard ", d[["Config/openalexPro/standard"]]))
+  p2 <- if (!uses_pro) res("P2", "n/a", "does not use openalexPro")
+  else if (!grepl("openalexPro\\s*\\(\\s*>=", deps)) res("P2", "fail", "uses openalexPro without a version floor", "declare `openalexPro (>= x.y.z)` in Imports")
+  else res("P2", "pass", "openalexPro with a version floor")
+  p2a <- if (is.null(d[["Config/openalexPro/standard"]])) {
+    res("P2a", "fail", "no `Config/openalexPro/standard`", paste0("add `Config/openalexPro/standard: ", standard_version(), "`"))
+  } else res("P2a", "pass", paste0("standard ", d[["Config/openalexPro/standard"]]))
 
   licence_ok <- grepl("^MIT\\b", d$License %||% "")
-  listed <- if (!is.null(manifest)) {
-    m <- utils::read.delim(manifest, header = FALSE, comment.char = "#", stringsAsFactors = FALSE)
-    pkg %in% m[[1]]
-  }
-  should <- c(if (!file.exists(file.path(path, "CITATION.cff"))) "no `CITATION.cff`",
-              if (!file.exists(file.path(path, "_pkgdown.yml"))) "no pkgdown site (`_pkgdown.yml`)")
+  listed <- if (!is.null(manifest)) pkg %in% listed_packages(manifest)
   p6 <- if (!licence_ok) res("P6", "fail", paste0("licence `", d$License, "`"), "use MIT")
-  else if (isFALSE(listed)) res("P6", "fail", "not in `repos.tsv`", "add a row to `repos.tsv`")
-  else if (length(should)) res("P6", "fail", should, "add them", level = "SHOULD")
-  else res("P6", "pass", "MIT; CITATION.cff; pkgdown (dev/main branches not checked)")
+  else if (isFALSE(listed)) res("P6", "fail", "not in `repos.tsv` or `compliance/external.tsv`", "add a row to one of them")
+  else res("P6", "pass", if (isTRUE(listed)) "MIT; listed" else "MIT (listing not checked)")
+  pkgdown <- any(file.exists(file.path(path, c("_pkgdown.yml", "_pkgdown.yaml", "pkgdown/_pkgdown.yml", "pkgdown/_pkgdown.yaml"))))
+  should <- c(if (!file.exists(file.path(path, "CITATION.cff"))) "no `CITATION.cff`",
+              if (!pkgdown) "no pkgdown site (`_pkgdown.yml`)")
+  p6a <- if (length(should)) res("P6a", "fail", should, "add them")
+  else res("P6a", "pass", "CITATION.cff; pkgdown (dev/main branches not checked)")
 
   ex_name <- if (!is.null(prefix)) paste0(prefix, "_example_corpus")
   has_ex <- if (!is.null(ex_name)) ex_name %in% exports else any(grepl("_example_corpus$", exports))
@@ -57,7 +57,7 @@ check_package <- function(path, kind = NULL, manifest = NULL) {
     if (grepl("^openalexImport", pkg) && !is("writer")) res("P1", "fail", "named `openalexImport*` but not a writer", "rename, or write a corpus")
     else if (grepl("^openalexExport", pkg) && !is("consumer")) res("P1", "fail", "named `openalexExport*` but not a consumer", "rename")
     else res("P1", "pass", paste0("`", pkg, "`")),
-    p2,
+    p2, p2a,
     if (grepl("^openalexImport", pkg)) {
       fn <- grep("_as_corpus$", exports, value = TRUE)
       if (length(fn)) res("P3", "pass", paste0("`", fn[1], "()`")) else res("P3", "fail", "no `<source>_as_corpus()` exported", "export it")
@@ -67,7 +67,13 @@ check_package <- function(path, kind = NULL, manifest = NULL) {
       if (length(hit)) res("P4", "pass", paste("test:", tests$where[hit[1]]))
       else res("P4", "fail", "no test calls `openalexAPI::prepare_corpus()`", "add one on the example corpus (P7)")
     },
-    p6,
+    p6, p6a,
+    if (is("annotator")) {
+      an <- if (!is.null(prefix)) paste0(prefix, "_example_annotation")
+      if (!is.null(an) && an %in% exports) res("P7a", "pass", paste0("`", an, "()`"))
+      else res("P7a", "fail", paste0("no `", an %||% "<prefix>_example_annotation", "()` exported"),
+               "export it: annotates a given corpus offline, returns the annotation folder")
+    },
     if (is("writer") || is("transformer")) {
       if (has_ex) res("P7", "pass", paste0("`", ex_name %||% grep("_example_corpus$", exports, value = TRUE)[1], "()`"))
       else res("P7", "fail", paste0("no `", ex_name %||% "<prefix>_example_corpus", "()` exported"),
@@ -86,8 +92,8 @@ check_package <- function(path, kind = NULL, manifest = NULL) {
       else res("A1", "pass", "no file writes found")
     },
     if (is("consumer") || is("transformer") || is("annotator")) {
-      if (length(writes_ids)) res("A3", "manual", paste("review id handling that may assume OpenAlex ids:", show(code$where[writes_ids])))
-      else res("A3", "pass", "no OpenAlex-only id patterns found")
+      if (length(writes_ids)) res("A2", "manual", paste("review id handling that may assume OpenAlex ids:", show(code$where[writes_ids])))
+      else res("A2", "manual", "no OpenAlex-only id patterns found; run it on a non-OpenAlex corpus")
     }
   )
   out <- bind(out)
@@ -102,7 +108,26 @@ namespace_exports <- function(path) {
   f <- file.path(path, "NAMESPACE")
   if (!file.exists(f)) return(character())
   ns <- readLines(f, warn = FALSE)
-  sub("^export\\((.*)\\)$", "\\1", grep("^export\\(", ns, value = TRUE)) |> gsub(pattern = "[\"`]", replacement = "")
+  ex <- sub("^export\\((.*)\\)$", "\\1", grep("^export\\(", ns, value = TRUE)) |> gsub(pattern = "[\"`]", replacement = "")
+  pat <- sub("^exportPattern\\((.*)\\)$", "\\1", grep("^exportPattern\\(", ns, value = TRUE)) |> gsub(pattern = "^[\"']|[\"']$", replacement = "")
+  if (length(pat)) {
+    defs <- source_lines(file.path(path, "R"))$text
+    fns <- sub("^([.A-Za-z][.A-Za-z0-9_]*)\\s*(<-|=)\\s*function.*$", "\\1",
+               grep("^[.A-Za-z][.A-Za-z0-9_]*\\s*(<-|=)\\s*function", defs, value = TRUE))
+    ex <- c(ex, fns[Reduce(`|`, lapply(pat, grepl, x = fns))])
+  }
+  unique(ex)
+}
+
+# Package names listed in repos.tsv (by directory or repository name) and/or
+# compliance/external.tsv (by repository name).
+listed_packages <- function(manifest) {
+  unlist(lapply(manifest[file.exists(manifest)], function(f) {
+    m <- utils::read.delim(f, header = FALSE, comment.char = "#", stringsAsFactors = FALSE, colClasses = "character")
+    if (!nrow(m)) return(character())
+    repo <- if (ncol(m) >= 2 && any(grepl("github", m[[2]]))) m[[2]] else m[[1]]
+    c(m[[1]], sub("\\.git$", "", basename(sub("^git@github.com:", "", repo))))
+  }))
 }
 
 detect_kind <- function(pkg, exports) {

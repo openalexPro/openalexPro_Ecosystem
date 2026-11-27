@@ -32,7 +32,7 @@ when the branch, `STANDARD.md` or the checker changed. Watched = the r-package r
 ## Then add what the code cannot check
 
 The report marks those rules `manual`. Review them as described in the
-`openalex-ecosystem-standard` skill (A1–A3, T3, C1, C2/P5/D4, L5*, Q2), and for
+`openalex-ecosystem-standard` skill (A1, A2, T3, C1, D4, L5a, L5c, Q2), and for
 consumers, transformers and annotators run the package on a compliant non-OpenAlex
 corpus in the scratchpad (A2). Add your findings under **Notes** of a local report, or
 summarise them to the user; do not edit published reports by hand (the next run
@@ -41,11 +41,12 @@ overwrites them).
 Summarise to the user in a few lines: verdict, number of MUST failures, the first thing
 to fix, and — for a package that wants to join — the onboarding steps still open:
 
-- prefix registered in STANDARD.md I5 (writers, transformers, annotators);
+- prefix registered in STANDARD.md I5 and openalexStandard's `prefixes.csv`
+  (writers, transformers, annotators);
 - `Config/openalexPro/standard: <version>` in DESCRIPTION;
 - `<prefix>_example_corpus(out)`, offline (P7) and a test running
   `openalexAPI::prepare_corpus()` on it (P4) — writers, transformers;
-- a test reading a non-OpenAlex corpus (A2) — consumers, transformers, annotators;
+- `<prefix>_example_annotation(out, corpus)` (P7a) — annotators;
 - a row in `repos.tsv` (ecosystem) or `compliance/external.tsv` (third party);
 - landing page / org profile / r-universe only once out of alpha.
 

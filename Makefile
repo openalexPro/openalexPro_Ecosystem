@@ -160,5 +160,6 @@ compliance:
 	  [[ "$$kind" == "r-package" ]] || continue; \
 	  [[ -f "$$name/DESCRIPTION" ]] || { echo "== $$name: no DESCRIPTION, skipped"; continue; }; \
 	  echo "== compliance $$name"; \
-	  Rscript -e "pkgload::load_all('pkg/openalexStandard', quiet = TRUE); r <- compliance_report('$$name', 'scratch/compliance/$$name', ref = system('git -C $$name branch --show-current', intern = TRUE), commit = system('git -C $$name rev-parse HEAD', intern = TRUE), manifest = 'repos.tsv'); m <- attr(r, 'meta'); cat(m\$$verdict, '-', m\$$must_open, 'MUST,', m\$$should_open, 'SHOULD open\n')" || exit 1; \
-	 done < $(MANIFEST)
+	  Rscript -e "pkgload::load_all('pkg/openalexStandard', quiet = TRUE); r <- compliance_report('$$name', 'scratch/compliance/$$name', ref = system('git -C $$name rev-parse --abbrev-ref HEAD', intern = TRUE), commit = system('git -C $$name rev-parse HEAD', intern = TRUE), manifest = c('repos.tsv', 'compliance/external.tsv')); m <- attr(r, 'meta'); cat(m\$$verdict, '-', m\$$must_open, 'MUST,', m\$$should_open, 'SHOULD open\n')" || { echo "== $$name: report failed"; failed="$$failed $$name"; }; \
+	 done < $(MANIFEST); \
+	 [[ -z "$$failed" ]] || { echo "Failed:$$failed"; exit 1; }

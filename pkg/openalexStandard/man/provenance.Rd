@@ -11,9 +11,9 @@ provenance(dir)
 }
 \value{
 A data frame: \code{level} (0 = \code{dir}), \code{path}, \code{writer}, \code{checksum}
-(\code{ok}, \code{changed}, \code{none}, \code{missing}).
+(\code{ok}, \code{changed}, \code{none}, \code{missing}, \code{external}).
 }
 \description{
 Follows \code{derived_from} in \verb{_dataset.json} back to the sources, and checks each
-recorded SHA-256 against the input's current \verb{_dataset.json}.
+recorded \code{content} fingerprint against the input's current data (D5).
 }

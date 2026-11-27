@@ -47,6 +47,8 @@ jobs:
       any: ${{ steps.plan.outputs.any }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - id: plan
         env:
           REPO: ${{ inputs.repo || 'all' }}
@@ -123,11 +125,10 @@ jobs:
           PRIVATE: ${{ matrix.private }}
         shell: Rscript {0}
         run: |
-          eco <- startsWith(Sys.getenv("REPO"), "openalexPro/")
           openalexStandard::compliance_report(
             "target", "out", redact = Sys.getenv("PRIVATE") == "true",
             repo = Sys.getenv("REPO"), ref = Sys.getenv("BRANCH"), commit = Sys.getenv("COMMIT"),
-            manifest = if (eco) "eco/repos.tsv")
+            manifest = c("eco/repos.tsv", "eco/compliance/external.tsv"))
       - name: Report a failed check or a branch without a package
         if: always() && (env.PKG == 'false' || steps.check.outcome != 'success')
         env:
@@ -169,6 +170,8 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/download-artifact@v4
         with:
           pattern: report-*

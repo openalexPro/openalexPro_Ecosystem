@@ -11,8 +11,8 @@ citation_normalized_percentile,"STRUCT(""value"" DOUBLE, is_in_top_1_percent BOO
 cited_by_count,BIGINT
 cited_by_percentile_year,"STRUCT(min BIGINT, max BIGINT)"
 concepts,"STRUCT(id VARCHAR, wikidata VARCHAR, display_name VARCHAR, ""level"" BIGINT, score DOUBLE)[]"
-corresponding_author_ids,VARCHAR
-corresponding_institution_ids,VARCHAR
+corresponding_author_ids,VARCHAR[]
+corresponding_institution_ids,VARCHAR[]
 countries_distinct_count,BIGINT
 counts_by_year,"STRUCT(""year"" BIGINT, cited_by_count BIGINT)[]"
 created_date,TIMESTAMP
@@ -24,7 +24,7 @@ has_content,"STRUCT(pdf BOOLEAN, grobid_xml BOOLEAN)"
 has_fulltext,BOOLEAN
 id,VARCHAR
 ids,"STRUCT(openalex VARCHAR, mag VARCHAR, doi VARCHAR, pmid VARCHAR)"
-indexed_in,VARCHAR
+indexed_in,VARCHAR[]
 institutions,JSON[]
 institutions_distinct_count,BIGINT
 is_paratext,BOOLEAN
@@ -40,9 +40,9 @@ primary_location,"STRUCT(id VARCHAR, ""source"" STRUCT(id VARCHAR, display_name 
 primary_topic,"STRUCT(id VARCHAR, display_name VARCHAR, score DOUBLE, subfield STRUCT(id VARCHAR, display_name VARCHAR), field STRUCT(id VARCHAR, display_name VARCHAR), ""domain"" STRUCT(id VARCHAR, display_name VARCHAR))"
 publication_date,DATE
 publication_year,BIGINT
-referenced_works,VARCHAR
+referenced_works,VARCHAR[]
 referenced_works_count,BIGINT
-related_works,VARCHAR
+related_works,VARCHAR[]
 sustainable_development_goals,"STRUCT(id VARCHAR, display_name VARCHAR, score DOUBLE)[]"
 title,VARCHAR
 topics,"STRUCT(id VARCHAR, display_name VARCHAR, score DOUBLE, subfield STRUCT(id VARCHAR, display_name VARCHAR), field STRUCT(id VARCHAR, display_name VARCHAR), ""domain"" STRUCT(id VARCHAR, display_name VARCHAR))[]"

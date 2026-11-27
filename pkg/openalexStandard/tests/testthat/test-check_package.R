@@ -1,16 +1,3 @@
-fake_pkg <- function(name, exports = character(), files = list()) {
-  d <- withr::local_tempdir(.local_envir = parent.frame())
-  writeLines(c(paste0("Package: ", name), "Version: 0.1.0", "License: MIT + file LICENSE",
-               "Title: x", "Description: x.", "Encoding: UTF-8"), file.path(d, "DESCRIPTION"))
-  writeLines(paste0("export(", exports, ")"), file.path(d, "NAMESPACE"))
-  dir.create(file.path(d, "R"))
-  for (f in names(files)) {
-    dir.create(dirname(file.path(d, f)), recursive = TRUE, showWarnings = FALSE)
-    writeLines(files[[f]], file.path(d, f))
-  }
-  d
-}
-
 test_that("kinds and prefixes are detected", {
   r <- check_package(fake_pkg("openalexImportFoo", "foo_as_corpus"))
   expect_equal(attr(r, "kind"), "writer")
@@ -35,7 +22,7 @@ test_that("P2 floor, P6 manifest and SHOULD levels", {
 
 test_that("A3 flags OpenAlex-only id handling for review", {
   p <- fake_pkg("someReader", files = list("R/a.R" = 'x <- grepl("^W", id)'))
-  expect_equal(check_package(p)$status[check_package(p)$rule == "A3"], "manual")
+  expect_equal(check_package(p)$status[check_package(p)$rule == "A2"], "manual")
 })
 
 test_that("compliance_report() builds the example corpus and writes the report", {

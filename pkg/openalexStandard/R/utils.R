@@ -28,6 +28,46 @@ standard_prefixes <- function() read_ext("prefixes.csv")
 #' @export
 standard_schemes <- function() read_ext("schemes.csv")$scheme
 
+#' Fingerprint of the data files of a corpus (STANDARD.md D5)
+#'
+#' SHA-256 of one line per Parquet file below `dir` (sorted by relative path):
+#' `<relative path>\t<size>\t<SHA-256 of the last 65536 bytes>`. The last bytes
+#' hold the Parquet footer (row counts, schema, column statistics), so the
+#' fingerprint changes with the data but not when the corpus is copied.
+#' @param dir A corpus (or annotation) folder.
+#' @return `"sha256:<hex>"`.
+#' @export
+content_fingerprint <- function(dir) {
+  dir <- normalizePath(dir, mustWork = TRUE)
+  files <- sort(parquet_files(dir))
+  rel <- substring(files, nchar(dir) + 2)
+  o <- order(rel, method = "radix")
+  tmp <- tempfile()
+  on.exit(unlink(tmp))
+  lines <- vapply(o, function(i) {
+    size <- file.size(files[i])
+    con <- file(files[i], "rb")
+    on.exit(close(con))
+    n <- min(size, 65536)
+    seek(con, size - n)
+    writeBin(readBin(con, "raw", n), tmp)
+    paste(rel[i], format(size, scientific = FALSE), sha256_file(tmp), sep = "\t")
+  }, "")
+  writeBin(charToRaw(paste0(paste(lines, collapse = "\n"), "\n")), tmp)
+  paste0("sha256:", sha256_file(tmp))
+}
+
+# OpenAlex link types (K1), as in api.openalex.org/links.
+link_types <- function() {
+  paste0("https://openalex.org/link-types/",
+         c("citation", "review", "translation", "summary", "retraction", "withdrawal", "removal",
+           "volume", "component", "data-series", "part"))
+}
+
+# Schemes for `<scheme>:<id>` link ends (K4): DOIs, URLs and OpenAlex ids are written
+# as URLs instead.
+link_schemes <- function() setdiff(standard_schemes(), c("doi", "url", "openalex"))
+
 works_fields <- function() read_ext("works_fields.csv")
 reserved_columns <- function() read_ext("reserved.csv")
 
