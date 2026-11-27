@@ -2,7 +2,7 @@
   "openalexPro/openalexImportZenodo@dev": {
     "commit": "60f58cd34b8a118130c2e9d04586bea19553958c",
     "standard": "af7d10f2f6924396912962cec9630a3bbb328d10",
-    "checker": "4e6ee9e8422721e656597f8df31b3016503bd67b",
+    "checker": "76408fad17366072bfd57404d6bf7f7b52e79e91",
     "verdict": "not compliant"
   },
   "openalexPro/openalexImportZenodo@main": {
