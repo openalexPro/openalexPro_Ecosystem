@@ -14,7 +14,7 @@ Packages checked against [STANDARD.md](https://github.com/openalexPro/openalexPr
 | [openalexAPI](https://github.com/openalexPro/openalexAPI) | main | [🔴 not compliant](openalexPro/openalexAPI/main.md) | 1 | 1 | `7f90007` | ecosystem |
 | [openalexConvert](https://github.com/openalexPro/openalexConvert) | dev | [🟡 compliant](openalexPro/openalexConvert/dev.md) | 0 | 1 | `b32af4a` | ecosystem |
 | [openalexConvert](https://github.com/openalexPro/openalexConvert) | main | [🟡 compliant](openalexPro/openalexConvert/main.md) | 0 | 1 | `ee92fc3` | ecosystem |
-| [openalexImportZenodo](https://github.com/openalexPro/openalexImportZenodo) | dev | [🔴 not compliant](openalexPro/openalexImportZenodo/dev.md) | 2 | 2 | `60f58cd` | ecosystem |
+| [openalexImportZenodo](https://github.com/openalexPro/openalexImportZenodo) | dev | [🟡 compliant](openalexPro/openalexImportZenodo/dev.md) | 0 | 1 | `55fa6eb` | ecosystem |
 | [openalexImportZenodo](https://github.com/openalexPro/openalexImportZenodo) | main | [⚪ error](openalexPro/openalexImportZenodo/main.md) |  |  | `63954f2` | ecosystem |
 | [openalexPro](https://github.com/openalexPro/openalexPro) | dev | [🔴 not compliant](openalexPro/openalexPro/dev.md) | 2 | 1 | `a6981a0` | ecosystem |
 | [openalexPro](https://github.com/openalexPro/openalexPro) | main | [🔴 not compliant](openalexPro/openalexPro/main.md) | 2 | 1 | `b3e681f` | ecosystem |

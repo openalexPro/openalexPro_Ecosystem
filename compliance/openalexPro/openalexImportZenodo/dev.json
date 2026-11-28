@@ -4,43 +4,43 @@
     "version": "0.0.0.9000",
     "repo": "openalexPro/openalexImportZenodo",
     "ref": "dev",
-    "commit": "60f58cd34b8a118130c2e9d04586bea19553958c",
+    "commit": "55fa6eb328c35b8c1983602354de5bd5ae182947",
     "standard": "0.1",
     "checker": "0.1.0",
     "kind": "writer",
     "prefix": "zenodo",
-    "corpus": "no example corpus (P7)",
-    "must_open": 2,
-    "should_open": 2,
-    "verdict": "not compliant"
+    "corpus": "built with `zenodo_example_corpus()`",
+    "must_open": 0,
+    "should_open": 1,
+    "verdict": "compliant"
   },
   "results": [
     {
       "rule": "L1",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "1 Parquet file(s)",
       "fix": ""
     },
     {
       "rule": "L2",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "1 `query=` partition(s)",
       "fix": ""
     },
     {
       "rule": "L3",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "L4",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
@@ -53,8 +53,8 @@
     {
       "rule": "L5b",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
@@ -67,64 +67,64 @@
     {
       "rule": "S1",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "1 works file(s)",
       "fix": ""
     },
     {
       "rule": "S2",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "names and top-level types (nested fields not checked)",
       "fix": ""
     },
     {
       "rule": "S3",
       "level": "SHOULD",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "S5",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "21 prefixed extra column(s)",
       "fix": ""
     },
     {
       "rule": "S5a",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "reserved: `abstract` (meaning not checked)",
       "fix": ""
     },
     {
       "rule": "S6",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "D1",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "D2",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "D3",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
@@ -137,64 +137,64 @@
     {
       "rule": "D5",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "sha256:fe7a523f3f0eb0bc5e6233ac0a7c6aaeb2c91afeda259be608c441d3989e915a",
       "fix": ""
     },
     {
       "rule": "Q1",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "Q2",
       "level": "SHOULD",
       "status": "manual",
-      "evidence": "review: _query.json is enough to repeat the download",
+      "evidence": "is `_query.json` enough to repeat the download? (review)",
       "fix": ""
     },
     {
       "rule": "Q3",
       "level": "SHOULD",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "Q4",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "present in the delivered corpus",
       "fix": ""
     },
     {
       "rule": "I1",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "n/a",
+      "evidence": "no OpenAlex ids",
       "fix": ""
     },
     {
       "rule": "I2",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "7 ids with prefix `zenodo`",
       "fix": ""
     },
     {
       "rule": "I3",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "`zenodo:<conceptrecid, or recid with versions = 'all'>`",
       "fix": ""
     },
     {
       "rule": "I4",
       "level": "SHOULD",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
@@ -207,8 +207,8 @@
     {
       "rule": "I6",
       "level": "SHOULD",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
@@ -235,9 +235,9 @@
     {
       "rule": "P2a",
       "level": "SHOULD",
-      "status": "fail",
-      "evidence": "no `Config/openalexPro/standard`",
-      "fix": "add `Config/openalexPro/standard: 0.1`"
+      "status": "pass",
+      "evidence": "standard 0.1",
+      "fix": ""
     },
     {
       "rule": "P3",
@@ -249,9 +249,9 @@
     {
       "rule": "P4",
       "level": "MUST",
-      "status": "fail",
-      "evidence": "no test calls `openalexAPI::prepare_corpus()`",
-      "fix": "add one on the example corpus (P7)"
+      "status": "pass",
+      "evidence": "test: testthat/test-compliance.R:10",
+      "fix": ""
     },
     {
       "rule": "P6",
@@ -270,9 +270,9 @@
     {
       "rule": "P7",
       "level": "MUST",
-      "status": "fail",
-      "evidence": "no `zenodo_example_corpus()` exported",
-      "fix": "export it: writes a small compliant corpus offline, returns the corpus folder"
+      "status": "pass",
+      "evidence": "`zenodo_example_corpus()`",
+      "fix": ""
     },
     {
       "rule": "P7a",
@@ -284,22 +284,22 @@
     {
       "rule": "K1",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "1 link file(s)",
       "fix": ""
     },
     {
       "rule": "K2",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "",
       "fix": ""
     },
     {
       "rule": "K4",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "3 outside end(s), all DOI/URL/`<scheme>:`",
       "fix": ""
     },
     {
@@ -368,10 +368,17 @@
     {
       "rule": "API",
       "level": "MUST",
-      "status": "not verified",
-      "evidence": "no example corpus (P7)",
+      "status": "pass",
+      "evidence": "`prepare_corpus()` builds the database",
       "fix": ""
     }
   ],
-  "provenance": null
+  "provenance": [
+    {
+      "level": 0,
+      "path": ".",
+      "writer": "openalexImportZenodo",
+      "checksum": null
+    }
+  ]
 }

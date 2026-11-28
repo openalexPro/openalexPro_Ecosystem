@@ -28,11 +28,11 @@
     "verdict": "compliant"
   },
   "openalexPro/openalexImportZenodo@dev": {
-    "commit": "60f58cd34b8a118130c2e9d04586bea19553958c",
+    "commit": "55fa6eb328c35b8c1983602354de5bd5ae182947",
     "standard": "257cb29b522b42cd5631467be6bd726c7d84e8fd",
     "checker": "44a3c491ef80a44f38ed3f633bc8a7082275fd76",
     "deps": "a6981a0ebc19-2c87e043a5d5",
-    "verdict": "not compliant"
+    "verdict": "compliant"
   },
   "openalexPro/openalexImportZenodo@main": {
     "commit": "63954f2094b9bc1480dfce78d7cebd5ee6773af3",
